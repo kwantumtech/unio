@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles.css'
+import logoUrl from '../logo.png'
 
 const launchDate = new Date('2026-11-07T09:00:00-05:00')
 
@@ -26,7 +27,7 @@ function V2() {
   return <main>
     <div className="ambient ambient-one" /><div className="ambient ambient-two" /><div className="grain" />
     <nav>
-      <a className="wordmark" href="#top" aria-label="UNIO home"><img src="/logo.png" alt="UNIO" /></a>
+      <a className="wordmark" href="#top" aria-label="UNIO home"><img src={logoUrl} alt="UNIO" /></a>
       <p>MIAMI / 2026</p><button className="menu-button" aria-label="Open menu"><i /><i /></button>
     </nav>
     <section className="hero" id="top">
