@@ -5,9 +5,9 @@
 body { margin: 0; min-width: 320px; }
 .coming-soon { min-height: 100svh; display: grid; place-items: center; overflow: hidden; position: relative; padding: 32px; background: #ece9e1; }
 .coming-soon::before { content: ''; position: absolute; inset: 0; background: url('/science_rest.png') center / min(88vw, 980px) auto no-repeat; opacity: .045; filter: blur(1px); transform: scale(1.1); }
-.coming-soon__content { position: relative; width: min(74vw, 320px); text-align: center; }
+.coming-soon__content { position: relative; width: min(70vw, 300px); text-align: center; transform: translateY(-1.5vh); }
 .coming-soon__logo { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
-.coming-soon__title { margin: 25px 0 0; font: 500 clamp(23px, 2.3vw, 30px)/1 'Cormorant Garamond', Georgia, serif; letter-spacing: -.035em; }
-.coming-soon__rule { width: 33px; height: 1px; margin: 17px auto 0; background: currentColor; opacity: .55; }
-.coming-soon__caption { margin: 14px 0 0; font: 500 9px/1.4 'Poppins', sans-serif; letter-spacing: .17em; text-transform: uppercase; opacity: .72; }
-@media (max-width: 520px) { .coming-soon__content { width: min(78vw, 290px); } .coming-soon__title { margin-top: 20px; } }
+.coming-soon__title { margin: 31px 0 0; font: 500 clamp(23px, 2.3vw, 30px)/1 'Cormorant Garamond', Georgia, serif; letter-spacing: -.035em; }
+.coming-soon__rule { width: 33px; height: 1px; margin: 19px auto 0; background: currentColor; opacity: .55; }
+.coming-soon__caption { margin: 15px 0 0; font: 500 9px/1.4 'Poppins', sans-serif; letter-spacing: .17em; text-transform: uppercase; opacity: .72; }
+@media (max-width: 520px) { .coming-soon__content { width: min(74vw, 280px); } .coming-soon__title { margin-top: 25px; } }
