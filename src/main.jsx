@@ -1,17 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './coming.css'
-import logoUrl from '../logo.png'
 
-function App() {
-  return <main className="coming-soon">
-    <div className="coming-soon__content">
-      <img className="coming-soon__logo" src={logoUrl} alt="Unio" />
-      <h1 className="coming-soon__title">Coming Soon</h1>
-      <div className="coming-soon__rule" />
-      <p className="coming-soon__caption">The science of reset</p>
-    </div>
-  </main>
-}
+const page = window.location.pathname.replace(/\/+$/, '') || '/'
+const Page = (await (page === '/preview' ? import('./Preview.jsx') : import('./ComingSoon.jsx'))).default
 
-createRoot(document.getElementById('root')).render(<StrictMode><App /></StrictMode>)
+createRoot(document.getElementById('root')).render(<StrictMode><Page /></StrictMode>)
