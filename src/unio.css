@@ -911,7 +911,7 @@ ol {
   width: clamp(9rem, 14vw, 12rem);
   padding: 12px;
   isolation: isolate;
-  transform: translateY(-50%);
+  transform: translate(var(--molecule-label-shift, 0px), -50%);
 }
 
 .hero__molecule-label::before {
@@ -1290,6 +1290,10 @@ ol {
   overflow: hidden;
   border-radius: 2px;
   aspect-ratio: 4 / 5;
+}
+
+.about__overlay {
+  display: none;
 }
 
 /* Oversized inside its frame so the parallax translate never exposes an edge.
@@ -2311,6 +2315,33 @@ ol {
     display: none;
   }
 
+  .about__overlay {
+    position: absolute;
+    top: 50%;
+    right: var(--gutter);
+    left: var(--gutter);
+    display: block;
+    padding-block: clamp(2rem, 4vw, 3rem);
+    color: var(--cream);
+    text-align: center;
+    transform: translateY(-50%);
+  }
+
+  .about__overlay p {
+    font-size: clamp(1.75rem, 0.9rem + 3.4vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+  }
+
+  .about__overlay em {
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .about__body .display {
+    display: none;
+  }
+
   .pillars__grid h2 {
     font-size: 1.2rem;
   }
@@ -2516,6 +2547,31 @@ ol {
   .hero__molecule {
     left: 55%;
     top: 44%;
+  }
+}
+
+/* Compact large screens: rotate the leader toward 1 o'clock so the
+   definition clears the figure and the browser's right gutter. Ultra-wide
+   screens keep the more open 2 o'clock composition. */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .hero__molecule {
+    --molecule-line: 100px !important;
+    --molecule-line-x: 3.5rem;
+    --molecule-line-y: 5rem;
+  }
+
+  .hero__molecule-label {
+    /* Keep the panel just to the right of the 1 o'clock leader. */
+    left: 78%;
+    transform: translate(calc(-50% + var(--molecule-label-shift, 0px)), -50%);
+  }
+
+  .hero__molecule::before {
+    transform: rotate(-55deg) scaleX(0);
+  }
+
+  .hero__molecule:hover::before {
+    transform: rotate(-55deg) scaleX(1);
   }
 }
 

@@ -403,6 +403,11 @@ function About() {
           preload="none"
           aria-hidden="true"
         />
+        <figcaption className="about__overlay plate">
+          <p>
+            A reset that is engineered, not <em>improvised.</em>
+          </p>
+        </figcaption>
       </figure>
 
       <div className="about__body">

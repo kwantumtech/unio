@@ -359,6 +359,30 @@ export function useHeroFilm(panelRef, videoRef) {
       const target = hero || panel
       target.style.setProperty('--sx', `${x.toFixed(1)}px`)
       target.style.setProperty('--sy', `${y.toFixed(1)}px`)
+
+      // On large desktop, keep the definition panel inside the viewport's
+      // right gutter. The line follows the adjusted panel edge instead of
+      // being allowed to run off-screen with it.
+      const molecule = hero?.querySelector('.hero__molecule')
+      const label = molecule?.querySelector('.hero__molecule-label')
+      if (desktop && window.innerWidth >= 1200 && molecule && label) {
+        // Measure in viewport coordinates; offsetLeft is unreliable here
+        // because the hero is a grid with nested positioned layers.
+        molecule.style.removeProperty('--molecule-label-shift')
+        molecule.style.removeProperty('--molecule-line')
+        const moleculeRect = molecule.getBoundingClientRect()
+        const labelRect = label.getBoundingClientRect()
+        const gutter = Math.max(22, Math.min(88, window.innerWidth * 0.05))
+        const overflow = Math.max(0, labelRect.right - (window.innerWidth - gutter))
+        const shift = -overflow
+        const lineStart = moleculeRect.left + moleculeRect.width * 0.78
+        const lineWidth = Math.max(32, labelRect.left + shift - lineStart)
+        molecule.style.setProperty('--molecule-label-shift', `${shift.toFixed(1)}px`)
+        molecule.style.setProperty('--molecule-line', `${lineWidth.toFixed(1)}px`)
+      } else {
+        molecule?.style.removeProperty('--molecule-label-shift')
+        molecule?.style.removeProperty('--molecule-line')
+      }
     }
 
     anchor()
