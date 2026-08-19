@@ -1,3 +1,5 @@
+import './unio.css'
+
 import { Fragment, useEffect, useId, useRef, useState } from 'react'
 import { Arrow, Pin, Recalibrate, Regulate, Reset, Serotonin } from './Icons.jsx'
 import {
@@ -141,6 +143,10 @@ function Nav() {
 
   return (
     <>
+      <div
+        className={`nav__scrim ${scrolled ? 'is-scrolled' : ''} ${dark && !open ? 'is-dark' : ''}`}
+        aria-hidden="true"
+      />
       <header className={`nav ${scrolled ? 'is-scrolled' : ''} ${dark && !open ? 'is-dark' : ''}`}>
         <a className="nav__brand" href="#top" aria-label="Unio — home">
           <img src="/assets/logos/logo-green.webp" alt="Unio" width="700" height="293" />
@@ -257,7 +263,7 @@ function Countdown() {
   return (
     <div className="countdown" aria-label="Time remaining until Unio">
       {parts.map(({ label, value }, i) => (
-        <div className="countdown__unit" key={label} style={{ '--d': `${1070 + i * 90}ms` }}>
+        <div className="countdown__unit" key={label} style={{ '--d': `${3200 + i * 90}ms` }}>
           <span className="countdown__value">
             <Roll value={value} />
           </span>
@@ -275,31 +281,31 @@ function Hero() {
 
   return (
     // An editorial spread: copy panel beside a contained film panel, not a
-    // full-bleed background. The film plays once on load and holds its final
+    // full-bleed background. The pre-reversed film plays once on load and holds its final
     // frame — no pinning, no scrubbing; scrolling simply moves past it.
     <section className="hero" id="top">
       <div className="hero__media" ref={panel}>
         <video
           ref={video}
           className="hero__film"
-          poster="/assets/images/orbit-poster.webp"
-          width="1280"
-          height="720"
+          poster="/assets/images/orbit-poster.webp?v=20260819"
+          width="1920"
+          height="1080"
           muted
           playsInline
           preload="auto"
           aria-hidden="true"
         >
-          <source src="/assets/video/orbit-hi.mp4" type="video/mp4" media="(min-width: 1200px)" />
-          <source src="/assets/video/orbit-md.mp4" type="video/mp4" />
+          <source src="/assets/video/orbit-hevc.mp4" type={'video/mp4; codecs="hvc1"'} />
+          <source src="/assets/video/orbit-h264.mp4" type={'video/mp4; codecs="avc1.640028"'} />
         </video>
 
         {/* Covers first paint, and stands in as the hero under reduced-motion
             or wherever autoplay is declined. */}
         <img
           className="hero__still"
-          src="/assets/images/orbit-poster.webp"
-          srcSet="/assets/images/orbit-poster-900.webp 900w, /assets/images/orbit-poster.webp 1280w"
+          src="/assets/images/orbit-poster.webp?v=20260819"
+          srcSet="/assets/images/orbit-poster-900.webp?v=20260819 900w, /assets/images/orbit-poster.webp?v=20260819 1280w"
           sizes="100vw"
           alt="A woman seated in meditation on a terrace at sunrise, palms and the Miami skyline beyond the water."
           width="1280"
@@ -308,13 +314,16 @@ function Hero() {
           decoding="async"
         />
 
-        {/* Not an overlay on the footage — a short seam where the copy panel
-            bleeds into the film's near edge. */}
-        <span className="hero__wash" aria-hidden="true" />
+      </div>
 
-        <div className="hero__molecule" aria-hidden="true">
-          <Serotonin />
-        </div>
+      <div className="hero__molecule" aria-hidden="true">
+        <Serotonin />
+        <span className="hero__molecule-label">
+          <span className="hero__molecule-label-text">serotonin</span>
+          <span className="hero__molecule-definition">
+            <span>the neurotransmitter that stabilizes mood and induces feelings of well-being.</span>
+          </span>
+        </span>
       </div>
 
       <div className="hero__copy">
@@ -394,6 +403,11 @@ function About() {
           preload="none"
           aria-hidden="true"
         />
+        <figcaption className="about__overlay plate">
+          <p>
+            A reset that is engineered, not <em>improvised.</em>
+          </p>
+        </figcaption>
       </figure>
 
       <div className="about__body">
@@ -709,6 +723,7 @@ function Interest() {
         <fieldset
           className={`field field--choice field--interests ${errors.interests ? 'is-invalid' : ''}`}
           aria-describedby={errors.interests ? `${uid}-interests-err` : undefined}
+          aria-required="true"
         >
           <legend>
             What would you like to learn more about?

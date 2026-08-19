@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://unio.alistevents.net/sitemap.xml
+Sitemap: https://uniomiami.com/sitemap.xml

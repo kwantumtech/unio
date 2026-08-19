@@ -510,13 +510,13 @@ ol {
     height 0.6s var(--ease-soft);
 }
 
-/* The scrim runs well past the bar so the fade lands softly in the hero
-   rather than cutting off at the nav's own edge. */
-.nav::before {
-  content: '';
-  position: absolute;
+/* The scrim is a sibling of the header rather than its pseudo-element. That
+   gives the hero copy a layer between the gradient and the header controls. */
+.nav__scrim {
+  position: fixed;
   inset: 0 0 auto;
-  height: calc(100% + 5.5rem);
+  z-index: 99;
+  height: calc(var(--nav-h) + 5.5rem);
   background: linear-gradient(
     to bottom,
     rgb(252 251 245 / 0.96) 0%,
@@ -525,11 +525,10 @@ ol {
     rgb(252 251 245 / 0) 100%
   );
   pointer-events: none;
-  z-index: -1;
   transition: opacity 0.6s var(--ease-soft);
 }
 
-.nav.is-scrolled::before {
+.nav__scrim.is-scrolled {
   opacity: 0;
 }
 
@@ -566,7 +565,7 @@ ol {
   opacity: 1;
 }
 
-.nav.is-dark::before {
+.nav__scrim.is-dark {
   background: linear-gradient(
     to bottom,
     rgb(34 52 37 / 0.94) 0%,
@@ -676,7 +675,7 @@ ol {
 .menu {
   position: fixed;
   inset: 0;
-  z-index: 99;
+  z-index: 200;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -826,25 +825,6 @@ ol {
   transition: opacity 0.9s var(--ease-soft);
 }
 
-/* Phones: a warm translucent gradient, dense only where type actually sits —
-   behind the copy at the top and the countdown at the foot — and released to
-   near-nothing across her. Never a solid cream block. From 860px up this
-   becomes the seam between the panels instead. */
-.hero__wash {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgb(246 241 229 / 0.15) 0%,
-    rgb(246 241 229 / 0.07) 26%,
-    rgb(246 241 229 / 0.01) 44%,
-    rgb(246 241 229 / 0) 60%,
-    rgb(246 241 229 / 0.01) 78%,
-    rgb(246 241 229 / 0.08) 100%
-  );
-  pointer-events: none;
-}
-
 /* Phones: a flex column over the film — save-the-date through title in the
    upper half, the CTA and countdown pinned to the foot of the viewport. */
 .hero__copy {
@@ -875,30 +855,115 @@ ol {
    the clip's held final framing (cover-fit maths in the hook), and the offset
    moves the mark left of it, clear of her head and upper shoulder. */
 .hero__molecule {
+  --molecule-line: clamp(2rem, 6vw, 6rem);
+  --molecule-line-x: clamp(1.73rem, 5.2vw, 5.2rem);
+  --molecule-line-y: clamp(1rem, 3vw, 3rem);
   display: block;
   position: absolute;
   left: var(--sx, 50%);
   top: var(--sy, 46%);
-  z-index: 1;
+  z-index: 3;
   width: clamp(6.5rem, 28vw, 8.5rem);
-  transform: translate(-135%, -30%);
-  color: #fff;
+  transform: translate(25%, -30%);
+  color: var(--regulation);
   opacity: 0;
-  filter: drop-shadow(0 0 0.35rem rgb(255 255 255 / 0.42));
-  animation: molecule-in 1.8s var(--ease-soft) 1.9s forwards;
-  pointer-events: none;
+  filter: drop-shadow(0 0 0.45rem rgb(252 251 245 / 0.8));
+  isolation: isolate;
+  /* Keep the annotation selectable in browser inspection while remaining
+     visually non-interactive (it has no click behavior). */
+  pointer-events: auto;
 }
 
-/* The hairline, running from the molecule out toward the copy and fading as
-   it goes. It shares the element's opacity, so it never outweighs the mark. */
+.hero__media[data-film-molecule='true'] ~ .hero__molecule {
+  animation: molecule-in 1s var(--ease-soft) forwards;
+}
+
+/* The 2 o'clock leader moves into the open upper-right space on hover —
+   a small interaction for anyone who discovers the molecule. */
 .hero__molecule::before {
   content: '';
   position: absolute;
-  right: 96%;
-  top: 50%;
-  width: clamp(3rem, 9vw, 9rem);
-  height: 1px;
-  background: linear-gradient(to left, rgb(255 255 255 / 0.9), rgb(255 255 255 / 0));
+  left: 78%;
+  top: 27%;
+  width: var(--molecule-line);
+  height: 1.5px;
+  background: linear-gradient(to right, rgb(46 91 79 / 0.82), rgb(46 91 79 / 0));
+  transform: rotate(-30deg) scaleX(0);
+  transform-origin: left;
+  transition: transform 0.8s var(--ease-soft);
+}
+
+.hero__molecule:hover::before {
+  transform: rotate(-30deg) scaleX(1);
+}
+
+/* The label arrives only after the line reaches it. */
+.hero__molecule-label {
+  position: absolute;
+  left: calc(78% + var(--molecule-line-x) + 0.45rem);
+  top: calc(27% - var(--molecule-line-y));
+  color: var(--regulation);
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  width: clamp(9rem, 14vw, 12rem);
+  padding: 12px;
+  isolation: isolate;
+  transform: translate(var(--molecule-label-shift, 0px), -50%);
+}
+
+.hero__molecule-label::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: rgb(252 251 245 / 0.72);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgb(252 251 245 / 0.4);
+  border-radius: 0.2rem;
+  opacity: 0;
+  transition: opacity 1s var(--ease-soft);
+}
+
+.hero__molecule-label-text {
+  display: block;
+  text-shadow: 0 0 0.45rem rgb(252 251 245 / 0.9);
+  opacity: 0;
+  transform: translateX(-0.25rem);
+  transition:
+    opacity 1s var(--ease-soft),
+    transform 1s var(--ease);
+}
+
+.hero__molecule-definition {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.55rem;
+  color: var(--ground);
+  font-family: var(--serif);
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(0.35rem);
+  transition:
+    opacity 1s var(--ease-soft) 0.15s,
+    transform 1s var(--ease) 0.15s;
+}
+
+/* The panel follows the line with a slow fade, and the word arrives just
+   after the panel begins to appear. */
+.hero__molecule:hover .hero__molecule-label::before {
+  opacity: 1;
+}
+
+.hero__molecule:hover .hero__molecule-label-text,
+.hero__molecule:hover .hero__molecule-definition {
+  opacity: 1;
+  transform: none;
 }
 
 @keyframes molecule-in {
@@ -914,6 +979,11 @@ ol {
   width: 100%;
   height: auto;
   overflow: visible;
+}
+
+.molecule path,
+.molecule circle {
+  stroke-width: 1.55px;
 }
 
 .molecule__atom {
@@ -940,16 +1010,28 @@ ol {
   }
 }
 
+@keyframes countdown-curtain {
+  from {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .hero__save {
-  --d: 160ms;
+  --d: 200ms;
   font-family: var(--sans);
-  font-size: clamp(0.9rem, 1.6vw, 1.0625rem);
-  color: var(--regulation);
+  font-size: clamp(1.08rem, 1.92vw, 1.275rem);
+  font-weight: 600;
+  color: var(--ground);
 }
 
 /* Date and its hairline stem, centred on each other as on the save-the-date. */
 .hero__dateblock {
-  --d: 300ms;
+  --d: 700ms;
   display: grid;
   justify-items: center;
   width: fit-content;
@@ -994,7 +1076,7 @@ ol {
 }
 
 .hero__title {
-  --d: 700ms;
+  --d: 1700ms;
   font-family: var(--sans);
   font-size: clamp(0.95rem, 2.1vw, 1.3125rem);
   font-weight: 500;
@@ -1007,7 +1089,7 @@ ol {
    only word set. Held below the title's weight so the billing reads
    A-List Events presents / The Science of Reset, in that order. */
 .hero__presents {
-  --d: 560ms;
+  --d: 1200ms;
   display: flex;
   /* Baseline, not centre — a flex image aligns on its bottom edge, which is
      within a pixel of the wordmark's own baseline at this size. */
@@ -1035,7 +1117,7 @@ ol {
 /* Hidden on phones: it repeats verbatim in "What is Unio?" two screens down,
    and the fold is worth more to the date, the venue and the CTA. */
 .hero__lede {
-  --d: 840ms;
+  --d: 2200ms;
   display: none;
   max-width: 36ch;
   margin-top: clamp(1.5rem, 3.6vh, 2.5rem);
@@ -1043,7 +1125,7 @@ ol {
 }
 
 .hero__actions {
-  --d: 960ms;
+  --d: 2700ms;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1208,6 +1290,10 @@ ol {
   overflow: hidden;
   border-radius: 2px;
   aspect-ratio: 4 / 5;
+}
+
+.about__overlay {
+  display: none;
 }
 
 /* Oversized inside its frame so the parallax translate never exposes an edge.
@@ -2067,7 +2153,8 @@ ol {
 .grain {
   position: fixed;
   inset: 0;
-  z-index: 300;
+  /* Keep texture above page content but below navigation and overlays. */
+  z-index: 50;
   pointer-events: none;
   opacity: 0.028;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -2076,57 +2163,197 @@ ol {
 /* ========================================================== breakpoints == */
 
 @media (max-width: 859px) {
-  /* A localized shadow, pulled down the copy column, gives the final video
-     frame contrast without recreating the former cream haze. */
-  .hero__wash {
-    background:
-      linear-gradient(to right, rgb(19 39 28 / 0.54) 0%, rgb(19 39 28 / 0.32) 42%, rgb(19 39 28 / 0.08) 68%, rgb(19 39 28 / 0) 100%),
-      linear-gradient(to bottom, rgb(19 39 28 / 0.08) 0%, rgb(19 39 28 / 0.2) 66%, rgb(19 39 28 / 0.08) 100%);
+  /* Keep the woman centred in portrait while matching the video and initial
+     poster exactly, so autoplay never creates a crop jump. */
+  .hero__film,
+  .hero__still {
+    object-position: 55% 50%;
+  }
+
+  /* The countdown has the same cream contrast plate as the desktop copy panel. */
+  .hero::after {
+    display: none;
   }
 
   .hero__copy {
     min-height: 100svh;
     box-sizing: border-box;
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    /* Sit above the scrim but below the header controls. */
+    z-index: 99;
   }
 
   .hero__save,
   .hero__date,
   .hero__title,
-  .hero__presents span,
-  .countdown__value,
-  .countdown__label {
-    color: var(--clarity);
-    text-shadow: 0 1px 1rem rgb(18 31 22 / 0.72);
+  .hero__presents span {
+    color: var(--regulation);
+    text-shadow: none;
   }
 
-  .hero__stem {
-    background: var(--clarity);
-    box-shadow: 0 1px 0.75rem rgb(18 31 22 / 0.72);
+  .hero__save {
+    position: relative;
+    z-index: 3;
+    color: var(--ground);
+  }
+
+  /* Let the film establish its contrast before the remaining hero copy
+     arrives. Save the date stays immediate; the date and following billing
+     cascade in behind it on mobile only. */
+  .hero__dateblock {
+    animation-delay: 2000ms;
+  }
+
+  .hero__presents {
+    animation-delay: 2700ms;
+  }
+
+  .hero__title {
+    animation-delay: 3400ms;
   }
 
   .hero__actions {
+    animation-delay: 4100ms;
+  }
+
+  .hero__title {
+    font-size: clamp(1.14rem, 2.52vw, 1.575rem);
+  }
+
+  .hero__date {
+    font-size: clamp(5.4rem, 22.8vw, 7.8rem);
+  }
+
+  .hero__presents img {
+    height: clamp(1.38rem, 2.28vw, 1.8rem);
+  }
+
+  .hero__presents span {
+    font-size: 0.675rem;
+  }
+
+  .hero__stem {
+    background: var(--regulation);
+    box-shadow: none;
+  }
+
+  .hero__actions {
+    justify-content: center;
+    width: 100%;
     margin-top: auto;
-    margin-bottom: calc(13.5rem + env(safe-area-inset-bottom));
+    margin-bottom: calc(13.5rem - 20px + env(safe-area-inset-bottom));
+    animation-duration: 1.4s;
   }
 
   .countdown {
     position: absolute;
+    z-index: 0;
     right: var(--gutter);
-    bottom: max(9.125rem, env(safe-area-inset-bottom));
+    bottom: max(calc(9.125rem - 80px), env(safe-area-inset-bottom));
     left: var(--gutter);
     justify-content: center;
     margin-top: 0;
     padding-top: 0.75rem;
-    border-color: rgb(252 251 245 / 0.65);
+    border-color: rgb(46 91 79 / 0.45);
+  }
+
+  .countdown::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -0.75rem -1rem;
+    background: rgb(246 241 229 / 0.85);
+    animation: countdown-curtain 1.1s var(--ease-soft) 3.7s both;
   }
 
   .countdown__unit {
     justify-items: center;
+    animation-delay: 4.9s;
+  }
+
+  .countdown__unit:nth-child(2) {
+    animation-delay: 4.99s;
+  }
+
+  .countdown__unit:nth-child(3) {
+    animation-delay: 5.08s;
+  }
+
+  .countdown__unit:nth-child(4) {
+    animation-delay: 5.17s;
+  }
+
+  .countdown__value,
+  .countdown__label {
+    color: var(--regulation);
+    text-shadow: none;
+  }
+
+  .countdown__value {
+    font-weight: 600;
+  }
+
+  .countdown__label {
+    font-weight: 700;
+  }
+
+  .hero__molecule {
+    --molecule-line: clamp(3.2rem, 19.2vw, 6rem);
+    --molecule-line-x: clamp(2.77rem, 16.6vw, 5.2rem);
+    --molecule-line-y: clamp(1.6rem, 9.6vw, 3rem);
+    left: 60%;
+    top: 46%;
+    color: var(--regulation);
+    filter: drop-shadow(0 0 0.45rem rgb(46 91 79 / 0.42));
   }
 
   .hero__molecule::before {
-    width: clamp(5rem, 30vw, 9rem);
+    display: none;
+  }
+
+  .hero__molecule-label {
+    display: none;
+  }
+
+  .about__overlay {
+    position: absolute;
+    top: 50%;
+    right: var(--gutter);
+    left: var(--gutter);
+    display: block;
+    padding-block: clamp(2rem, 4vw, 3rem);
+    color: var(--cream);
+    text-align: center;
+    transform: translateY(-50%);
+  }
+
+  .about__overlay p {
+    font-size: clamp(1.75rem, 0.9rem + 3.4vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+  }
+
+  .about__overlay em {
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .about__body .display {
+    display: none;
+  }
+
+  .pillars__grid h2 {
+    font-size: 1.2rem;
+  }
+
+  .pillars__grid p {
+    font-size: 1.1rem;
+    line-height: 1.15;
+  }
+
+  .pillars__grid .glyph {
+    align-self: start;
+    margin-top: 0.15rem;
   }
 }
 
@@ -2198,11 +2425,33 @@ ol {
     display: none;
   }
 
-  /* The editorial spread: copy panel left, film panel right. The film takes
-     the wider column so it reads as the feature, at close to native scale.
+  /* The editorial spread: translucent copy panel left, full-bleed film behind.
      Every phone-cover override below restores its desktop value here. */
   .hero {
-    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    grid-template-columns: minmax(0, calc(42% - 60px)) minmax(0, 1fr);
+  }
+
+  /* Shift the existing cover crop right without changing the media sizing or
+     mobile composition, placing her closer to the right three-quarter line. */
+  .hero__film,
+  .hero__still {
+    object-position: 0% 50%;
+    transform: translateX(25px) scale(1.08);
+    transform-origin: center;
+  }
+
+  .hero__molecule {
+    left: var(--sx, 50%);
+  }
+
+  /* The film runs beneath both columns; this 85% cream panel makes the left
+     column translucent while retaining a deliberately sharp vertical edge. */
+  .hero::before {
+    content: '';
+    z-index: 1;
+    grid-row: 1;
+    grid-column: 1;
+    background: rgb(246 241 229 / 0.85);
   }
 
   .hero__copy {
@@ -2215,20 +2464,17 @@ ol {
     /* Matched top and bottom so the block centres optically, not just
        mathematically — the top carries a nav-height allowance. */
     padding-block: var(--nav-h) var(--nav-h);
+    /* Sit above the scrim but below the header controls. */
+    z-index: 99;
   }
 
   .hero__media {
     position: relative;
     inset: auto;
     grid-row: 1;
-    grid-column: 2;
+    grid-column: 1 / -1;
+    z-index: 0;
     min-height: 100svh;
-  }
-
-  /* Side-by-side, the seam runs vertically along the film's left edge — the
-     footage itself carries no veil. */
-  .hero__wash {
-    background: linear-gradient(to right, rgb(246 241 229 / 0.85), rgb(246 241 229 / 0) 10%);
   }
 
   .hero__date {
@@ -2293,6 +2539,42 @@ ol {
   }
 }
 
+/* Medium desktop: keep the molecule in the open image area instead of
+   letting the source-frame anchor push its label beyond the viewport. The
+   existing 860px desktop switch stays intact; 1200px is the large-layout
+   handoff where the anchored right-side placement has enough room. */
+@media (min-width: 860px) and (max-width: 1199px) {
+  .hero__molecule {
+    left: 55%;
+    top: 44%;
+  }
+}
+
+/* Compact large screens: rotate the leader toward 1 o'clock so the
+   definition clears the figure and the browser's right gutter. Ultra-wide
+   screens keep the more open 2 o'clock composition. */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .hero__molecule {
+    --molecule-line: 100px !important;
+    --molecule-line-x: 3.5rem;
+    --molecule-line-y: 5rem;
+  }
+
+  .hero__molecule-label {
+    /* Keep the panel just to the right of the 1 o'clock leader. */
+    left: 78%;
+    transform: translate(calc(-50% + var(--molecule-label-shift, 0px)), -50%);
+  }
+
+  .hero__molecule::before {
+    transform: rotate(-55deg) scaleX(0);
+  }
+
+  .hero__molecule:hover::before {
+    transform: rotate(-55deg) scaleX(1);
+  }
+}
+
 @media (min-width: 1100px) {
   .space {
     padding-inline: max(var(--gutter), calc((100vw - var(--max)) / 2));
@@ -2334,6 +2616,18 @@ ol {
 
   .hero__molecule {
     opacity: 0.3;
+    animation: none;
+  }
+
+  .hero__molecule-label {
+    transform: translateY(-50%);
+    animation: none;
+  }
+
+  .hero__molecule-label::before,
+  .hero__molecule-label-text {
+    opacity: 1;
+    transform: none;
     animation: none;
   }
 

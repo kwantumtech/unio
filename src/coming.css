@@ -51,7 +51,7 @@ body {
 
 .coming-soon__title {
   margin: 31px 0 0;
-  font: 500 clamp(23px, 2.3vw, 30px) / 1 'Cormorant Garamond', Georgia, serif;
+  font: 500 clamp(23px, 2.3vw, 30px) / 1 'Cormorant Garamond', ui-serif, Georgia, 'Times New Roman', serif;
   letter-spacing: -0.035em;
 }
 
@@ -65,7 +65,7 @@ body {
 
 .coming-soon__caption {
   margin: 15px 0 0;
-  font: 500 9px / 1.4 Poppins, sans-serif;
+  font: 500 9px / 1.4 'Poppins', ui-sans-serif, system-ui, -apple-system, sans-serif;
   letter-spacing: 0.17em;
   text-transform: uppercase;
   opacity: 0.72;

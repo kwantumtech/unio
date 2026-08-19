@@ -319,7 +319,7 @@ export function useAmbientVideo(ref, base) {
 }
 
 /**
- * Cinematic hero playback: the film starts on load, plays through once and
+ * Cinematic hero playback: the pre-reversed film starts on load, plays through once and
  * parks on its final frame — no loop, no scroll coupling. The still under it
  * covers first paint, and stays as the hero wherever playback never begins
  * (reduced-motion, or an autoplay the browser declines).
@@ -335,20 +335,60 @@ export function useHeroFilm(panelRef, videoRef) {
     const panel = panelRef.current
     const video = videoRef.current
     if (!panel || !video) return
+    const hero = panel.parentElement
 
     const anchor = () => {
       const cw = panel.clientWidth
       const ch = panel.clientHeight
-      const cover = Math.max(cw / 1280, ch / 720)
-      const dw = 1280 * cover
-      const dh = 720 * cover
-      // Sampled off the clip's held final frame: 0.505 across, 0.455 down.
-      panel.style.setProperty('--sx', `${((cw - dw) / 2 + 0.505 * dw).toFixed(1)}px`)
-      panel.style.setProperty('--sy', `${((ch - dh) / 2 + 0.455 * dh).toFixed(1)}px`)
+      const cover = Math.max(cw / 1920, ch / 1080)
+      const dw = 1920 * cover
+      const dh = 1080 * cover
+      // The new 1080p delivery puts her head at this source point. On desktop
+      // the film uses a left-biased cover crop and a small positional transform;
+      // apply the identical mapping so the annotation stays locked to her as
+      // the viewport changes.
+      const desktop = window.matchMedia('(min-width: 860px)').matches
+      const sourceX = desktop ? 0 : (cw - dw) * 0.69
+      const sourceY = (ch - dh) / 2
+      let x = sourceX + 0.56 * dw
+      let y = sourceY + 0.45 * dh
+      if (desktop) {
+        x = cw / 2 + (x - cw / 2) * 1.08 + 25
+        y = ch / 2 + (y - ch / 2) * 1.08
+      }
+      const target = hero || panel
+      target.style.setProperty('--sx', `${x.toFixed(1)}px`)
+      target.style.setProperty('--sy', `${y.toFixed(1)}px`)
+
+      // On large desktop, keep the definition panel inside the viewport's
+      // right gutter. The line follows the adjusted panel edge instead of
+      // being allowed to run off-screen with it.
+      const molecule = hero?.querySelector('.hero__molecule')
+      const label = molecule?.querySelector('.hero__molecule-label')
+      if (desktop && window.innerWidth >= 1200 && molecule && label) {
+        // Measure in viewport coordinates; offsetLeft is unreliable here
+        // because the hero is a grid with nested positioned layers.
+        molecule.style.removeProperty('--molecule-label-shift')
+        molecule.style.removeProperty('--molecule-line')
+        const moleculeRect = molecule.getBoundingClientRect()
+        const labelRect = label.getBoundingClientRect()
+        const gutter = Math.max(22, Math.min(88, window.innerWidth * 0.05))
+        const overflow = Math.max(0, labelRect.right - (window.innerWidth - gutter))
+        const shift = -overflow
+        const lineStart = moleculeRect.left + moleculeRect.width * 0.78
+        const lineWidth = Math.max(32, labelRect.left + shift - lineStart)
+        molecule.style.setProperty('--molecule-label-shift', `${shift.toFixed(1)}px`)
+        molecule.style.setProperty('--molecule-line', `${lineWidth.toFixed(1)}px`)
+      } else {
+        molecule?.style.removeProperty('--molecule-label-shift')
+        molecule?.style.removeProperty('--molecule-line')
+      }
     }
 
     anchor()
     window.addEventListener('resize', anchor, { passive: true })
+
+    let moleculeTimer
 
     if (!prefersReducedMotion()) {
       // Swap the still for the film only once frames are actually rendering,
@@ -359,11 +399,22 @@ export function useHeroFilm(panelRef, videoRef) {
 
     function onPlaying() {
       panel.dataset.film = 'on'
+      const remaining = Number.isFinite(video.duration)
+        ? Math.max(0, video.duration - video.currentTime)
+        : 0
+      // Bring the molecule in only during the final half-second, so it does
+      // not collide with the film's rotation settling into its final frame.
+      moleculeTimer = window.setTimeout(onMoleculeCue, Math.max(0, (remaining - 0.5) * 1000))
+    }
+
+    function onMoleculeCue() {
+      panel.dataset.filmMolecule = 'true'
     }
 
     return () => {
       window.removeEventListener('resize', anchor)
       video.removeEventListener('playing', onPlaying)
+      window.clearTimeout(moleculeTimer)
     }
   }, [panelRef, videoRef])
 }
