@@ -833,7 +833,8 @@ ol {
   display: flex;
   flex-direction: column;
   align-items: start;
-  padding: calc(var(--nav-h) + 1rem) var(--gutter) clamp(2.25rem, 6vw, 3.5rem);
+  /* Lift the upper save-the-date lockup clear of the subject's head on phones. */
+  padding: calc(var(--nav-h) - 1rem) var(--gutter) clamp(2.25rem, 6vw, 3.5rem);
 }
 
 /* The column reveals once, on load, top to bottom: save-the-date, the date,
