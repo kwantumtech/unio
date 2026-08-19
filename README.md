@@ -12,10 +12,9 @@ npm run preview
 
 ## Before launch — two things
 
-1. **`.env` → `VITE_SITE_URL`** is a placeholder (`https://unio.alistevents.net`).
-   It feeds the canonical link, the OG tags and the JSON-LD. Set the real domain
-   and rebuild, and update the same host in `public/robots.txt` and
-   `public/sitemap.xml`.
+1. The canonical and Open Graph metadata uses `https://uniomiami.com`.
+   If the production domain changes, update `index.html`, `public/robots.txt`,
+   and `public/sitemap.xml` together.
 2. **Node 20.19+ is required** (Vite 8). `.nvmrc` pins 22 — `nvm use` before
    building. On Node 16 the build dies with a misleading
    `node:util … styleText` error that looks like application code.
@@ -285,8 +284,9 @@ selects more than one.
 VITE_RSVP_ENDPOINT=https://formspree.io/f/YOUR_ID
 ```
 
-With no endpoint set it opens the visitor's mail client pre-filled to
-`info@alistevents.net`. That is a real fallback, not a substitute for a backend.
+With no endpoint set, submissions post directly to the configured Google Form.
+There is no mail-client fallback; update the endpoint or Google Form configuration
+if the intake destination changes.
 
 ## Motion
 

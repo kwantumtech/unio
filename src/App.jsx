@@ -141,6 +141,10 @@ function Nav() {
 
   return (
     <>
+      <div
+        className={`nav__scrim ${scrolled ? 'is-scrolled' : ''} ${dark && !open ? 'is-dark' : ''}`}
+        aria-hidden="true"
+      />
       <header className={`nav ${scrolled ? 'is-scrolled' : ''} ${dark && !open ? 'is-dark' : ''}`}>
         <a className="nav__brand" href="#top" aria-label="Unio — home">
           <img src="/assets/logos/logo-green.webp" alt="Unio" width="700" height="293" />
@@ -312,7 +316,12 @@ function Hero() {
 
       <div className="hero__molecule" aria-hidden="true">
         <Serotonin />
-        <span className="hero__molecule-label"><span className="hero__molecule-label-text">serotonin</span></span>
+        <span className="hero__molecule-label">
+          <span className="hero__molecule-label-text">serotonin</span>
+          <span className="hero__molecule-definition">
+            <span>the neurotransmitter that stabilizes mood and induces feelings of well-being.</span>
+          </span>
+        </span>
       </div>
 
       <div className="hero__copy">
@@ -707,6 +716,7 @@ function Interest() {
         <fieldset
           className={`field field--choice field--interests ${errors.interests ? 'is-invalid' : ''}`}
           aria-describedby={errors.interests ? `${uid}-interests-err` : undefined}
+          aria-required="true"
         >
           <legend>
             What would you like to learn more about?

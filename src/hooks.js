@@ -348,7 +348,7 @@ export function useHeroFilm(panelRef, videoRef) {
       // apply the identical mapping so the annotation stays locked to her as
       // the viewport changes.
       const desktop = window.matchMedia('(min-width: 860px)').matches
-      const sourceX = desktop ? 0 : (cw - dw) / 2
+      const sourceX = desktop ? 0 : (cw - dw) * 0.69
       const sourceY = (ch - dh) / 2
       let x = sourceX + 0.56 * dw
       let y = sourceY + 0.45 * dh
@@ -365,7 +365,6 @@ export function useHeroFilm(panelRef, videoRef) {
     window.addEventListener('resize', anchor, { passive: true })
 
     let moleculeTimer
-    let finalSecondTimer
 
     if (!prefersReducedMotion()) {
       // Swap the still for the film only once frames are actually rendering,
@@ -379,23 +378,19 @@ export function useHeroFilm(panelRef, videoRef) {
       const remaining = Number.isFinite(video.duration)
         ? Math.max(0, video.duration - video.currentTime)
         : 0
-      moleculeTimer = window.setTimeout(onMoleculeCue, Math.max(0, (remaining - 2) * 1000))
-      finalSecondTimer = window.setTimeout(onFinalSecond, Math.max(0, (remaining - 1) * 1000))
+      // Bring the molecule in only during the final half-second, so it does
+      // not collide with the film's rotation settling into its final frame.
+      moleculeTimer = window.setTimeout(onMoleculeCue, Math.max(0, (remaining - 0.5) * 1000))
     }
 
     function onMoleculeCue() {
       panel.dataset.filmMolecule = 'true'
     }
 
-    function onFinalSecond() {
-      panel.dataset.filmFinal = 'true'
-    }
-
     return () => {
       window.removeEventListener('resize', anchor)
       video.removeEventListener('playing', onPlaying)
       window.clearTimeout(moleculeTimer)
-      window.clearTimeout(finalSecondTimer)
     }
   }, [panelRef, videoRef])
 }

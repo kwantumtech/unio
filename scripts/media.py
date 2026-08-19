@@ -92,12 +92,19 @@ for name, box, rgb in [
     im.save(path, "WEBP", quality=92, method=6, exact=True)
     print(f"{path.name:22} {im.width}x{im.height}  {path.stat().st_size / 1024:6.1f} KB")
 
-# Social card: the hero cropped to 1.91:1 with the wordmark set into its
+# Social card: the hero cropped to 1.91:1 with the full lockup set into its
 # cream margin. Composited rather than typeset so no font files are needed.
 card = Image.open(SRC / "photography" / "hero-terrace.png").convert("RGB").resize((1200, 599), Image.LANCZOS)
 card = card.crop((0, 0, 1200, 599)).resize((1200, 630), Image.LANCZOS)
-badge = marks["logo-green"].resize((300, 126), Image.LANCZOS)
-card.paste(badge, (96, 252), badge)
+
+# The supplied lockup includes the wordmark and “The Science of Reset”. Turn
+# its light paper background into transparency, then retint both marks green.
+lockup_source = Image.open(SRC / "logos" / "unio-lockup.png").convert("L")
+lockup_alpha = lockup_source.point(lambda v: max(0, min(255, round((247 - v) * 255 / (247 - 30)))))
+lockup = Image.new("RGBA", lockup_source.size, (46, 91, 79, 0))
+lockup.putalpha(lockup_alpha)
+lockup = lockup.resize((300, 165), Image.LANCZOS)
+card.paste(lockup, (96, 216), lockup)
 card.save(OUT / "images" / "og.jpg", "JPEG", quality=86, optimize=True)
 print(f"{'og.jpg':22} 1200x630  {(OUT / 'images' / 'og.jpg').stat().st_size / 1024:6.1f} KB")
 
