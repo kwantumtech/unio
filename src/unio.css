@@ -908,7 +908,7 @@ ol {
   font-weight: 600;
   letter-spacing: 0.12em;
   line-height: 1;
-  width: clamp(9rem, 15vw, 13rem);
+  width: clamp(9rem, 14vw, 12rem);
   padding: 12px;
   isolation: isolate;
   transform: translateY(-50%);
@@ -943,8 +943,8 @@ ol {
   margin-top: 0.55rem;
   color: var(--ground);
   font-family: var(--serif);
-  font-size: clamp(0.7rem, 1vw, 0.85rem);
-  font-weight: 400;
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  font-weight: 500;
   letter-spacing: 0;
   line-height: 1.2;
   opacity: 0;
@@ -2191,6 +2191,25 @@ ol {
     position: relative;
     z-index: 3;
     color: var(--ground);
+  }
+
+  /* Let the film establish its contrast before the remaining hero copy
+     arrives. Save the date stays immediate; the date and following billing
+     cascade in behind it on mobile only. */
+  .hero__dateblock {
+    animation-delay: 2000ms;
+  }
+
+  .hero__presents {
+    animation-delay: 2700ms;
+  }
+
+  .hero__title {
+    animation-delay: 3400ms;
+  }
+
+  .hero__actions {
+    animation-delay: 4100ms;
   }
 
   .hero__title {
