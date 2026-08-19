@@ -170,31 +170,34 @@ if shutil.which("ffmpeg") and VIDEO_SRC.exists():
     print(f"{poster.name:22} 576x720            {poster.stat().st_size / 1024:7.1f} KB")
 # ---------------------------------------------------------- scroll-scrub hero
 
-# The Higgsfield orbit drives the hero by scroll position rather than playing.
-# Two things about the delivered file make it unusable as-is:
-#   * it is HEVC, which Chrome and Firefox will not decode;
-#   * it carries a single keyframe, so every seek would decode from frame 0.
-# Re-encoded to H.264 all-intra: every frame is a keyframe, so a seek is a
-# direct decode. That is what makes scrubbing smooth instead of stuttering.
-ORBIT_SRC = SRC / "video" / "hf_20260818_184846_7039d5e8-9c11-4a6d-a9e6-e3eae82258e8.mp4"
+# The Higgsfield orbit plays in reverse as the hero opens. Encoding the reverse
+# into the files (rather than relying on a negative playbackRate) keeps autoplay
+# reliable across browsers, notably Safari.
+# The delivered HEVC source needs a broad-compatibility fallback, and the
+# reversed site playback requires a fresh encode. The site plays linearly, so
+# both outputs use normal two-second web-video GOPs rather than all-intra.
+ORBIT_SRC = SRC / "video" / "hf_20260819_004044_838ba99b-3228-4671-95fe-9e49895c88de.mp4"
 
 if shutil.which("ffmpeg") and ORBIT_SRC.exists():
-    for tag, scale, crf in [("hi", "1280:720", 26), ("md", "960:540", 27)]:
+    for tag, codec, crf, extra in [
+        ("hevc", "libx265", 17, ["-x265-params", "keyint=48:min-keyint=24:scenecut=40", "-tag:v", "hvc1"]),
+        ("h264", "libx264", 18, ["-profile:v", "high", "-g", "48", "-keyint_min", "24"]),
+    ]:
         out = OUT / "video" / f"orbit-{tag}.mp4"
         subprocess.run(
-            ["ffmpeg", "-v", "error", "-i", str(ORBIT_SRC), "-vf", f"scale={scale}",
-             "-c:v", "libx264", "-preset", "slow", "-crf", str(crf),
-             "-x264opts", "keyint=1:min-keyint=1:no-scenecut",
-             "-pix_fmt", "yuv420p", "-profile:v", "high", "-an",
-             "-movflags", "+faststart", str(out), "-y"],
+            ["ffmpeg", "-v", "error", "-i", str(ORBIT_SRC), "-vf", "reverse",
+             "-c:v", codec, "-preset", "slow", "-crf", str(crf),
+             "-pix_fmt", "yuv420p", *extra,
+             "-an", "-movflags", "+faststart", str(out), "-y"],
             check=True,
         )
-        print(f"{out.name:22} {scale.replace(':', 'x')} all-intra  {out.stat().st_size / 1024:7.1f} KB")
+        print(f"{out.name:22} 1920x1080 24fps crf{crf}  {out.stat().st_size / 1024:7.1f} KB")
 
-    # Frame 0 covers first paint, reduced-motion, and the phone layout, so the
-    # hero never waits on 3 MB of video to show something.
+    # Frame 0 of the reversed delivery covers first paint, reduced-motion, and
+    # the phone layout, so the hero never flashes from the original opening
+    # shot into the reversed film.
     frame = OUT / "_orbit.png"
-    subprocess.run(["ffmpeg", "-v", "error", "-i", str(ORBIT_SRC), "-frames:v", "1", str(frame), "-y"], check=True)
+    subprocess.run(["ffmpeg", "-v", "error", "-i", str(OUT / "video" / "orbit-h264.mp4"), "-frames:v", "1", str(frame), "-y"], check=True)
     still = Image.open(frame).convert("RGB")
     for name, box, widths in [
         ("orbit-poster", None, [1280, 900]),
@@ -211,6 +214,7 @@ if shutil.which("ffmpeg") and ORBIT_SRC.exists():
             r.save(path, "WEBP", quality=80, method=6)
             print(f"{path.name:22} {width}x{height}  {path.stat().st_size / 1024:7.1f} KB")
     frame.unlink()
+
 
 else:
     print("ffmpeg or source video missing — skipped water.mp4")

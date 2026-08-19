@@ -826,25 +826,6 @@ ol {
   transition: opacity 0.9s var(--ease-soft);
 }
 
-/* Phones: a warm translucent gradient, dense only where type actually sits —
-   behind the copy at the top and the countdown at the foot — and released to
-   near-nothing across her. Never a solid cream block. From 860px up this
-   becomes the seam between the panels instead. */
-.hero__wash {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgb(246 241 229 / 0.15) 0%,
-    rgb(246 241 229 / 0.07) 26%,
-    rgb(246 241 229 / 0.01) 44%,
-    rgb(246 241 229 / 0) 60%,
-    rgb(246 241 229 / 0.01) 78%,
-    rgb(246 241 229 / 0.08) 100%
-  );
-  pointer-events: none;
-}
-
 /* Phones: a flex column over the film — save-the-date through title in the
    upper half, the CTA and countdown pinned to the foot of the viewport. */
 .hero__copy {
@@ -875,30 +856,87 @@ ol {
    the clip's held final framing (cover-fit maths in the hook), and the offset
    moves the mark left of it, clear of her head and upper shoulder. */
 .hero__molecule {
+  --molecule-line: clamp(2rem, 6vw, 6rem);
+  --molecule-line-x: clamp(1.73rem, 5.2vw, 5.2rem);
+  --molecule-line-y: clamp(1rem, 3vw, 3rem);
   display: block;
   position: absolute;
   left: var(--sx, 50%);
   top: var(--sy, 46%);
-  z-index: 1;
+  z-index: 3;
   width: clamp(6.5rem, 28vw, 8.5rem);
-  transform: translate(-135%, -30%);
-  color: #fff;
+  transform: translate(25%, -30%);
+  color: var(--regulation);
   opacity: 0;
-  filter: drop-shadow(0 0 0.35rem rgb(255 255 255 / 0.42));
-  animation: molecule-in 1.8s var(--ease-soft) 1.9s forwards;
+  filter: drop-shadow(0 0 0.45rem rgb(252 251 245 / 0.8));
+  isolation: isolate;
   pointer-events: none;
 }
 
-/* The hairline, running from the molecule out toward the copy and fading as
-   it goes. It shares the element's opacity, so it never outweighs the mark. */
+.hero__media[data-film-molecule='true'] ~ .hero__molecule {
+  animation: molecule-in 1.2s var(--ease-soft) forwards;
+}
+
+/* The 2 o'clock leader moves into the open upper-right space. */
 .hero__molecule::before {
   content: '';
   position: absolute;
-  right: 96%;
-  top: 50%;
-  width: clamp(3rem, 9vw, 9rem);
-  height: 1px;
-  background: linear-gradient(to left, rgb(255 255 255 / 0.9), rgb(255 255 255 / 0));
+  left: 78%;
+  top: 27%;
+  width: var(--molecule-line);
+  height: 1.5px;
+  background: linear-gradient(to right, rgb(46 91 79 / 0.82), rgb(46 91 79 / 0));
+  transform: rotate(-30deg) scaleX(0);
+  transform-origin: left;
+}
+
+.hero__media[data-film-final='true'] ~ .hero__molecule::before {
+  animation: molecule-line 0.55s var(--ease-soft) forwards;
+}
+
+/* The label arrives only after the line reaches it. */
+.hero__molecule-label {
+  position: absolute;
+  left: calc(78% + var(--molecule-line-x) + 0.45rem);
+  top: calc(27% - var(--molecule-line-y));
+  color: var(--regulation);
+  font-family: var(--sans);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  padding: 20px;
+  isolation: isolate;
+  transform: translateY(-50%);
+}
+
+.hero__molecule-label::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: rgb(252 251 245 / 0.72);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgb(252 251 245 / 0.4);
+  border-radius: 0.2rem;
+  opacity: 0;
+}
+
+.hero__molecule-label-text {
+  display: block;
+  text-shadow: 0 0 0.45rem rgb(252 251 245 / 0.9);
+  opacity: 0;
+  transform: translateX(-0.25rem);
+}
+
+/* The panel starts with one second remaining and settles half a second after
+   the final frame. The word itself still follows the completed line. */
+.hero__media[data-film-final='true'] ~ .hero__molecule .hero__molecule-label::before {
+  animation: molecule-panel 1.5s var(--ease-soft) forwards;
+}
+
+.hero__media[data-film-final='true'] ~ .hero__molecule .hero__molecule-label-text {
+  animation: molecule-label 0.32s var(--ease) 0.58s forwards;
 }
 
 @keyframes molecule-in {
@@ -910,10 +948,30 @@ ol {
   }
 }
 
+@keyframes molecule-line {
+  to { transform: rotate(-30deg) scaleX(1); }
+}
+
+@keyframes molecule-label {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes molecule-panel {
+  to { opacity: 1; }
+}
+
 .molecule {
   width: 100%;
   height: auto;
   overflow: visible;
+}
+
+.molecule path,
+.molecule circle {
+  stroke-width: 1.55px;
 }
 
 .molecule__atom {
@@ -941,15 +999,16 @@ ol {
 }
 
 .hero__save {
-  --d: 160ms;
+  --d: 200ms;
   font-family: var(--sans);
-  font-size: clamp(0.9rem, 1.6vw, 1.0625rem);
-  color: var(--regulation);
+  font-size: clamp(1.08rem, 1.92vw, 1.275rem);
+  font-weight: 600;
+  color: var(--ground);
 }
 
 /* Date and its hairline stem, centred on each other as on the save-the-date. */
 .hero__dateblock {
-  --d: 300ms;
+  --d: 700ms;
   display: grid;
   justify-items: center;
   width: fit-content;
@@ -994,7 +1053,7 @@ ol {
 }
 
 .hero__title {
-  --d: 700ms;
+  --d: 1700ms;
   font-family: var(--sans);
   font-size: clamp(0.95rem, 2.1vw, 1.3125rem);
   font-weight: 500;
@@ -1007,7 +1066,7 @@ ol {
    only word set. Held below the title's weight so the billing reads
    A-List Events presents / The Science of Reset, in that order. */
 .hero__presents {
-  --d: 560ms;
+  --d: 1200ms;
   display: flex;
   /* Baseline, not centre — a flex image aligns on its bottom edge, which is
      within a pixel of the wordmark's own baseline at this size. */
@@ -1035,7 +1094,7 @@ ol {
 /* Hidden on phones: it repeats verbatim in "What is Unio?" two screens down,
    and the fold is worth more to the date, the venue and the CTA. */
 .hero__lede {
-  --d: 840ms;
+  --d: 2200ms;
   display: none;
   max-width: 36ch;
   margin-top: clamp(1.5rem, 3.6vh, 2.5rem);
@@ -1043,7 +1102,7 @@ ol {
 }
 
 .hero__actions {
-  --d: 960ms;
+  --d: 2700ms;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -2076,14 +2135,6 @@ ol {
 /* ========================================================== breakpoints == */
 
 @media (max-width: 859px) {
-  /* A localized shadow, pulled down the copy column, gives the final video
-     frame contrast without recreating the former cream haze. */
-  .hero__wash {
-    background:
-      linear-gradient(to right, rgb(19 39 28 / 0.54) 0%, rgb(19 39 28 / 0.32) 42%, rgb(19 39 28 / 0.08) 68%, rgb(19 39 28 / 0) 100%),
-      linear-gradient(to bottom, rgb(19 39 28 / 0.08) 0%, rgb(19 39 28 / 0.2) 66%, rgb(19 39 28 / 0.08) 100%);
-  }
-
   .hero__copy {
     min-height: 100svh;
     box-sizing: border-box;
@@ -2125,8 +2176,10 @@ ol {
     justify-items: center;
   }
 
-  .hero__molecule::before {
-    width: clamp(5rem, 30vw, 9rem);
+  .hero__molecule {
+    --molecule-line: clamp(3.2rem, 19.2vw, 6rem);
+    --molecule-line-x: clamp(2.77rem, 16.6vw, 5.2rem);
+    --molecule-line-y: clamp(1.6rem, 9.6vw, 3rem);
   }
 }
 
@@ -2198,11 +2251,33 @@ ol {
     display: none;
   }
 
-  /* The editorial spread: copy panel left, film panel right. The film takes
-     the wider column so it reads as the feature, at close to native scale.
+  /* The editorial spread: translucent copy panel left, full-bleed film behind.
      Every phone-cover override below restores its desktop value here. */
   .hero {
-    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    grid-template-columns: minmax(0, calc(42% - 60px)) minmax(0, 1fr);
+  }
+
+  /* Shift the existing cover crop right without changing the media sizing or
+     mobile composition, placing her closer to the right three-quarter line. */
+  .hero__film,
+  .hero__still {
+    object-position: 0% 50%;
+    transform: translateX(25px) scale(1.08);
+    transform-origin: center;
+  }
+
+  .hero__molecule {
+    left: var(--sx, 50%);
+  }
+
+  /* The film runs beneath both columns; this 85% cream panel makes the left
+     column translucent while retaining a deliberately sharp vertical edge. */
+  .hero::before {
+    content: '';
+    z-index: 1;
+    grid-row: 1;
+    grid-column: 1;
+    background: rgb(246 241 229 / 0.85);
   }
 
   .hero__copy {
@@ -2221,14 +2296,9 @@ ol {
     position: relative;
     inset: auto;
     grid-row: 1;
-    grid-column: 2;
+    grid-column: 1 / -1;
+    z-index: 0;
     min-height: 100svh;
-  }
-
-  /* Side-by-side, the seam runs vertically along the film's left edge — the
-     footage itself carries no veil. */
-  .hero__wash {
-    background: linear-gradient(to right, rgb(246 241 229 / 0.85), rgb(246 241 229 / 0) 10%);
   }
 
   .hero__date {
@@ -2334,6 +2404,18 @@ ol {
 
   .hero__molecule {
     opacity: 0.3;
+    animation: none;
+  }
+
+  .hero__molecule-label {
+    transform: translateY(-50%);
+    animation: none;
+  }
+
+  .hero__molecule-label::before,
+  .hero__molecule-label-text {
+    opacity: 1;
+    transform: none;
     animation: none;
   }
 
