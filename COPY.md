@@ -4,14 +4,15 @@ This document is the source-of-truth reference for the copy currently presented 
 
 ## How updates work
 
-- The full Unio experience is rendered at `/preview` while `/` renders the Coming Soon page.
+- The full Unio experience is now rendered at `/` and `/preview`.
+- The Coming Soon page remains available at `/coming-soon`.
 - Page copy lives primarily in `src/App.jsx`.
 - SEO and social-share copy lives in `index.html`.
 - Coming Soon copy lives in `src/ComingSoon.jsx`.
 - Form checkbox values must match the connected Google Form options exactly, including punctuation.
 - After changing copy, run `npm run build` and check both desktop and mobile layouts.
 
-## Coming Soon page (`/`)
+## Coming Soon page (`/coming-soon`)
 
 | Location | Copy |
 | --- | --- |
