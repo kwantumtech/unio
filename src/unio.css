@@ -2665,6 +2665,10 @@ ol {
 }
 
 @media (min-width: 860px) {
+  .speaker {
+    gap: 0;
+  }
+
   .actionbar {
     display: none;
   }
