@@ -796,7 +796,8 @@ ol {
 }
 
 .hero__film,
-.hero__still {
+.hero__still,
+.hero__final-still {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -805,9 +806,8 @@ ol {
   object-position: 50% 50%;
 }
 
-/* The footage is left as shot — warm, sunlit, ungraded, no veil over it. It
-   plays once and parks on its final frame; the still covers first paint and
-   stands in wherever playback never begins. */
+/* Preview begins on the poster, swaps to the one-time film only after a
+   rendered frame is available, then fades to the paired final still on end. */
 .hero__film {
   opacity: 0;
   transition: opacity 0.9s var(--ease-soft);
@@ -823,6 +823,27 @@ ol {
 
 .hero__still {
   transition: opacity 0.9s var(--ease-soft);
+}
+
+/* The paired hero still fills its media panel without any playback or visual
+   transition, so the framing is stable from first paint. */
+.hero__static-picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.hero__final-picture {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s var(--ease-soft);
+}
+
+.hero__media[data-film-ended='true'] .hero__final-picture {
+  opacity: 1;
 }
 
 /* Phones: a flex column over the film — save-the-date through title in the
@@ -1317,6 +1338,169 @@ ol {
 
 .about__body .display {
   max-width: 15ch;
+}
+
+/* speakers --------------------------------------------------------------- */
+
+.speakers {
+  overflow: hidden;
+}
+
+.speakers__head {
+  display: grid;
+  gap: 1.5rem;
+  max-width: var(--max);
+  margin-inline: auto;
+}
+
+.speakers__head .display {
+  max-width: 12ch;
+  margin-top: 1.35rem;
+}
+
+.speakers__intro {
+  max-width: 31ch;
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+.speakers__grid {
+  display: grid;
+  gap: 1px;
+  max-width: var(--max);
+  margin: clamp(3.25rem, 7vw, 5.5rem) auto 0;
+  border-block: 1px solid var(--hair-dark);
+  background: var(--hair-dark);
+}
+
+.speaker {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  min-width: 0;
+  padding: clamp(1.75rem, 4vw, 3rem) 0;
+  background: var(--reset);
+}
+
+.speaker__head {
+  display: grid;
+  grid-template-columns: auto 6.5625rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.speaker__portrait {
+  width: 6.5625rem;
+  aspect-ratio: 1;
+  border: 1px solid rgb(161 125 77 / 0.52);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 24%;
+  background: var(--clarity);
+}
+
+.speaker__number,
+.speaker__role,
+.speaker__organization,
+.speaker__session > p,
+.speakers__more {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.speaker__number {
+  color: var(--regulation);
+  padding-top: 0.45em;
+}
+
+.speaker__role {
+  display: block;
+  color: var(--ink-muted);
+}
+
+.speaker h3 {
+  margin-top: 0.65rem;
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 1rem + 1.8vw, 2.4rem);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.speaker__organization {
+  margin-top: 0.8rem;
+  color: var(--regulation);
+}
+
+.speaker__session {
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--hair-dark);
+}
+
+.speaker__session > p {
+  color: var(--regulation);
+}
+
+.speaker h4 {
+  max-width: 19ch;
+  margin-top: 0.8rem;
+  font-family: var(--serif);
+  font-size: clamp(1.55rem, 1.1rem + 1.7vw, 2.4rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.speaker__detail {
+  margin-top: 0.8rem;
+  color: var(--ink-muted) !important;
+}
+
+/* On phones the programming titles are intentionally one clean editorial
+   line. This keeps each session block equally compact before the supporting
+   line and description begin. */
+@media (max-width: 599px) {
+  .speaker {
+    gap: 1.75rem;
+  }
+
+  .speaker h4 {
+    /* Let the display title use a little of the surrounding gutter while the
+       metadata and body remain on the primary text alignment. */
+    width: calc(100% + 1rem);
+    max-width: none;
+    font-size: clamp(1.25rem, 5.55vw, 1.45rem);
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .speaker__detail {
+    margin-top: 0.6rem;
+  }
+}
+
+.speaker__description {
+  max-width: 51ch;
+  color: var(--ink-muted);
+  font-size: clamp(1rem, 0.92rem + 0.35vw, 1.125rem);
+  line-height: 1.52;
+  text-wrap: pretty;
+}
+
+.speaker__description p + p {
+  margin-top: 1em;
+}
+
+.speakers__more {
+  max-width: var(--max);
+  margin: 1.4rem auto 0;
+  color: var(--ink-muted);
 }
 
 /* space ------------------------------------------------------------------- */
@@ -2164,11 +2348,29 @@ ol {
 /* ========================================================== breakpoints == */
 
 @media (max-width: 859px) {
+  /* The mobile art is intentionally translated upward to position the pair.
+     Extend its media canvas by the same amount so that crop never reveals the
+     hero's cream background below the image. */
+  .hero__media {
+    bottom: -220px;
+  }
+
   /* Keep the woman centred in portrait while matching the video and initial
      poster exactly, so autoplay never creates a crop jump. */
   .hero__film,
-  .hero__still {
+  .hero__still,
+  .hero__final-still {
     object-position: 55% 50%;
+  }
+
+  /* The portrait end-frame is deliberately a little lower than the moving
+     film, holding the full paired pose below the hero copy and CTA. */
+  .hero__final-still {
+    object-position: 50% 50%;
+    /* Extra scale keeps the image covering the hero's lower edge after the
+       upward framing shift—no cream gap below the countdown. */
+    transform: translateY(calc(3rem - 260px)) scale(1.15);
+    transform-origin: center bottom;
   }
 
   /* The countdown has the same cream contrast plate as the desktop copy panel. */
@@ -2207,6 +2409,8 @@ ol {
 
   .hero__presents {
     animation-delay: 2700ms;
+    /* Move the billing/title unit below the right-side palm fronds. */
+    margin-top: clamp(1.4rem, 3vw, 3.5rem);
   }
 
   .hero__title {
@@ -2218,11 +2422,13 @@ ol {
   }
 
   .hero__title {
-    font-size: clamp(1.14rem, 2.52vw, 1.575rem);
+    font-size: clamp(1.25rem, 2.52vw, 1.575rem);
+    /* Independent mobile control for the Science of Reset line. */
+    margin-top: 20px;
   }
 
   .hero__date {
-    font-size: clamp(5.4rem, 22.8vw, 7.8rem);
+    font-size: clamp(7rem, 22.8vw, 7.8rem);
   }
 
   .hero__presents img {
@@ -2242,7 +2448,8 @@ ol {
     justify-content: center;
     width: 100%;
     margin-top: auto;
-    margin-bottom: calc(13.5rem - 20px + env(safe-area-inset-bottom));
+    /* The lower hero elements rise together while retaining clear separation. */
+    margin-bottom: calc(11rem + 230px + env(safe-area-inset-bottom));
     animation-duration: 1.4s;
   }
 
@@ -2250,7 +2457,7 @@ ol {
     position: absolute;
     z-index: 0;
     right: var(--gutter);
-    bottom: max(calc(9.125rem - 80px), env(safe-area-inset-bottom));
+    bottom: max(calc(9.125rem - 90px), env(safe-area-inset-bottom));
     left: var(--gutter);
     justify-content: center;
     margin-top: 0;
@@ -2368,6 +2575,42 @@ ol {
     align-items: center;
   }
 
+  .speakers__head {
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.72fr);
+    align-items: end;
+    gap: clamp(2rem, 7vw, 7rem);
+  }
+
+  .speaker__head {
+    /* Desktop cards share a deliberate header baseline. On mobile the content
+       flows naturally so no empty reserved space appears above the session. */
+    min-height: 10rem;
+  }
+
+  .speaker__role {
+    min-height: 2.7em;
+  }
+
+  .speaker h3 {
+    min-height: 1.96em;
+  }
+
+  .speaker h4 {
+    min-height: 2.1em;
+  }
+
+  .speaker__detail {
+    min-height: 2.7em;
+  }
+
+  .speakers__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .speaker {
+    padding: clamp(2rem, 4vw, 3.25rem);
+  }
+
   .audience__list {
     grid-template-columns: 1fr 1fr;
   }
@@ -2435,10 +2678,18 @@ ol {
   /* Shift the existing cover crop right without changing the media sizing or
      mobile composition, placing her closer to the right three-quarter line. */
   .hero__film,
-  .hero__still {
+  .hero__still,
+  .hero__final-still {
     object-position: 0% 50%;
     transform: translateX(25px) scale(1.08);
     transform-origin: center;
+  }
+
+  /* The final paired still has its own wide composition. Keep both people
+     inside the visible media panel instead of inheriting the film crop. */
+  .hero__final-still {
+    object-position: 100% 50%;
+    transform: none;
   }
 
   .hero__molecule {

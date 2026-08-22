@@ -6,4 +6,8 @@ const page = window.location.pathname.replace(/\/+$/, '') || '/'
 // available at its own route for staging or future campaign use.
 const Page = (await (page === '/coming-soon' ? import('./ComingSoon.jsx') : import('./App.jsx'))).default
 
-createRoot(document.getElementById('root')).render(<StrictMode><Page /></StrictMode>)
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <Page heroMode={page === '/preview' ? 'video' : 'still'} />
+  </StrictMode>,
+)

@@ -330,8 +330,10 @@ export function useAmbientVideo(ref, base) {
  * `--sx`/`--sy`. The overlay offsets itself into the negative space beside
  * her from there.
  */
-export function useHeroFilm(panelRef, videoRef) {
+export function useHeroFilm(panelRef, videoRef, enabled = true) {
   useEffect(() => {
+    if (!enabled) return undefined
+
     const panel = panelRef.current
     const video = videoRef.current
     if (!panel || !video) return
@@ -411,12 +413,19 @@ export function useHeroFilm(panelRef, videoRef) {
       panel.dataset.filmMolecule = 'true'
     }
 
+    function onEnded() {
+      panel.dataset.filmEnded = 'true'
+    }
+
+    video.addEventListener('ended', onEnded, { once: true })
+
     return () => {
       window.removeEventListener('resize', anchor)
       video.removeEventListener('playing', onPlaying)
+      video.removeEventListener('ended', onEnded)
       window.clearTimeout(moleculeTimer)
     }
-  }, [panelRef, videoRef])
+  }, [enabled, panelRef, videoRef])
 }
 
 const UNITS = [

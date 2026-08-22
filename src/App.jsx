@@ -1,6 +1,12 @@
 import './unio.css'
 
 import { Fragment, useEffect, useId, useRef, useState } from 'react'
+import heroPairStill from '../assets/photography/hero-pair-v4.png'
+import heroPairMobileStill from '../assets/photography/hero-pair-mobile-v2.png'
+import geoffPortrait from '../assets/speakers/geoff-cole.png'
+import eduardoPortrait from '../assets/speakers/eduardo-placer.png'
+import christaPortrait from '../assets/speakers/christa-cantillo.png'
+import arlettePortrait from '../assets/speakers/arlette-carlin.png'
 import { Arrow, Pin, Recalibrate, Regulate, Reset, Serotonin } from './Icons.jsx'
 import {
   useCountdown,
@@ -20,6 +26,7 @@ import {
 
 const NAV = [
   ['What is Unio', '#about'],
+  ['Speakers', '#speakers'],
   ['The Space', '#space'],
   ['Ethos', '#ethos'],
   ['Who It’s For', '#audience'],
@@ -75,6 +82,56 @@ const BENEFITS = [
   ['Strengthen connection'],
   ['Elevate', 'workplace culture'],
   ['Increase', 'employee', 'engagement'],
+]
+
+// Speaker programming lives in one content collection so new client-approved
+// sessions can be added without changing the component or its layout.
+const SPEAKERS = [
+  {
+    name: 'Geoff “G” Cole, CLC, ARM',
+    portrait: geoffPortrait,
+    organization: 'Cole Neural Institute',
+    role: 'Neuroscientist for Performance & Behavioral Change',
+    session: 'Nervous System Reset',
+    detail: 'For performance, recovery & connection.',
+    description: [
+      'Geoff Cole of the Cole Neural Institute will introduce a new, patent-pending method for reconditioning our nervous system, training the same way we train our muscles, giving us control over how we think, react, recover, and connect.',
+      'Through this interactive presentation and live demonstration, guests will experience how shifts in the nervous system can be measured and shaped in real time. We’ll learn how this intentional reset and reconditioning can create change that works and change that lasts.',
+    ],
+  },
+  {
+    name: 'Eduardo Placer',
+    portrait: eduardoPortrait,
+    organization: 'Founder of Fearless Communicators',
+    role: 'Chief Story Doula',
+    session: 'Presence Under Pressure',
+    detail: 'The practice of staying grounded when it matters most.',
+    description: [
+      'Eduardo Placer’s session explores how leaders can move from survival mode into greater agency, clarity, and grounded action. Drawing on a personal story of being stranded on a mountain, he uses storytelling, guided reflection, and collective participation to help guests examine where they may feel stuck, reconnect with what matters most, and create movement from a more regulated, intentional place.',
+    ],
+  },
+  {
+    name: 'Christa Cantillo',
+    portrait: christaPortrait,
+    role: 'Holistic Movement + Sound Practitioner · Wellness Coach',
+    session: 'Root Sonic Flow',
+    detail: 'Breath, movement & sound for nervous system regulation.',
+    description: [
+      'Root Sonic Flow is a full-body recalibration integrating somatic breathwork, Pilates, gentle yoga, Qi Gong, and immersive sound. Led by Christa Cantillo, the session is designed to help shift the nervous system out of fight-or-flight and toward rest-and-digest.',
+      'Through breath, intentional movement, and sound, guests will deepen interoceptive awareness and experience what greater regulation can feel like in the body: more grounded, clear, connected, and at ease.',
+    ],
+  },
+  {
+    name: 'Arlette Carlin',
+    portrait: arlettePortrait,
+    role: 'Sound Alchemist · DJ · Sonic Curator',
+    session: 'The Closing Frequency',
+    detail: 'A sound-led closing immersion.',
+    description: [
+      'As the day moves toward its final session, the Unio experience moves beyond conversation and into sound. Arlette Carlin, resident DJ at the iconic Delano Miami Beach, will curate an immersive sonic journey designed to let the work of the day settle into the body.',
+      'A closing immersion. A frequency-forward experience designed to leave you grounded, open, and at ease. Dim lights. Intentional sound. A different kind of close.',
+    ],
+  },
 ]
 
 /* --------------------------------------------------------------- primitives */
@@ -274,57 +331,72 @@ function Countdown() {
   )
 }
 
-function Hero() {
+function Hero({ heroMode }) {
   const panel = useRef(null)
   const video = useRef(null)
-  useHeroFilm(panel, video)
+  const hasVideoPreview = heroMode === 'video'
+  useHeroFilm(panel, video, hasVideoPreview)
 
   return (
-    // An editorial spread: copy panel beside a contained film panel, not a
-    // full-bleed background. The pre-reversed film plays once on load and holds its final
-    // frame — no pinning, no scrubbing; scrolling simply moves past it.
+    // The live page is a composed still; Preview alone rehearses the one-time
+    // film and resolves into that same final still.
     <section className="hero" id="top">
       <div className="hero__media" ref={panel}>
-        <video
-          ref={video}
-          className="hero__film"
-          poster="/assets/images/orbit-poster.webp?v=20260819"
-          width="1920"
-          height="1080"
-          muted
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-        >
-          <source src="/assets/video/orbit-hevc.mp4" type={'video/mp4; codecs="hvc1"'} />
-          <source src="/assets/video/orbit-h264.mp4" type={'video/mp4; codecs="avc1.640028"'} />
-        </video>
+        {hasVideoPreview && (
+          <>
+            <video
+              ref={video}
+              className="hero__film"
+              poster="/assets/images/orbit-poster.webp?v=20260819"
+              width="1920"
+              height="1080"
+              muted
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+            >
+              <source src="/assets/video/orbit-hevc.mp4" type={'video/mp4; codecs="hvc1"'} />
+              <source src="/assets/video/orbit-h264.mp4" type={'video/mp4; codecs="avc1.640028"'} />
+            </video>
+            <img
+              className="hero__still"
+              src="/assets/images/orbit-poster.webp?v=20260819"
+              srcSet="/assets/images/orbit-poster-900.webp?v=20260819 900w, /assets/images/orbit-poster.webp?v=20260819 1280w"
+              sizes="100vw"
+              alt=""
+              width="1280"
+              height="720"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </>
+        )}
 
-        {/* Covers first paint, and stands in as the hero under reduced-motion
-            or wherever autoplay is declined. */}
-        <img
-          className="hero__still"
-          src="/assets/images/orbit-poster.webp?v=20260819"
-          srcSet="/assets/images/orbit-poster-900.webp?v=20260819 900w, /assets/images/orbit-poster.webp?v=20260819 1280w"
-          sizes="100vw"
-          alt="A woman seated in meditation on a terrace at sunrise, palms and the Miami skyline beyond the water."
-          width="1280"
-          height="720"
-          fetchPriority="high"
-          decoding="async"
-        />
-
+        <picture className={hasVideoPreview ? 'hero__final-picture' : 'hero__static-picture'}>
+          <source media="(max-width: 859px)" srcSet={heroPairMobileStill} />
+          <img
+            className="hero__final-still"
+            src={heroPairStill}
+            alt={hasVideoPreview ? '' : 'Two people seated in meditation on a terrace overlooking the ocean at sunset.'}
+            width="1776"
+            height="886"
+            fetchPriority="high"
+            decoding="async"
+          />
+        </picture>
       </div>
 
-      <div className="hero__molecule" aria-hidden="true">
-        <Serotonin />
-        <span className="hero__molecule-label">
-          <span className="hero__molecule-label-text">serotonin</span>
-          <span className="hero__molecule-definition">
-            <span>the neurotransmitter that stabilizes mood and induces feelings of well-being.</span>
+      {!hasVideoPreview && (
+        <div className="hero__molecule" aria-hidden="true">
+          <Serotonin />
+          <span className="hero__molecule-label">
+            <span className="hero__molecule-label-text">serotonin</span>
+            <span className="hero__molecule-definition">
+              <span>the neurotransmitter that stabilizes mood and induces feelings of well-being.</span>
+            </span>
           </span>
-        </span>
-      </div>
+        </div>
+      )}
 
       <div className="hero__copy">
         <p className="hero__save">Save the date.</p>
@@ -424,6 +496,61 @@ function About() {
           to enhance focus, creativity, and collaboration, while fostering genuine community.
         </p>
       </div>
+    </Section>
+  )
+}
+
+function Speakers() {
+  return (
+    <Section id="speakers" tone="warm" className="speakers">
+      <header className="speakers__head">
+        <div>
+          <Kicker>Sessions &amp; speakers</Kicker>
+          <h2 className="display">The people guiding the reset.</h2>
+        </div>
+        <p className="speakers__intro">
+          A focused program of science, story, movement, and sound—designed to make the day felt
+          long after it ends.
+        </p>
+      </header>
+
+      <ol className="speakers__grid">
+        {SPEAKERS.map((speaker, i) => (
+          <li key={speaker.name} className="speaker" style={{ '--d': `${i * 90}ms` }}>
+            <header className="speaker__head">
+              <span className="speaker__number">{String(i + 1).padStart(2, '0')}</span>
+              <img
+                className="speaker__portrait"
+                src={speaker.portrait}
+                alt={`Portrait of ${speaker.name}`}
+                width="1536"
+                height="1536"
+                loading="lazy"
+                decoding="async"
+              />
+              <div>
+                <p className="speaker__role">{speaker.role}</p>
+                <h3>{speaker.name}</h3>
+                {speaker.organization && <p className="speaker__organization">{speaker.organization}</p>}
+              </div>
+            </header>
+
+            <div className="speaker__session">
+              <p>About the session</p>
+              <h4>{speaker.session}</h4>
+              {speaker.detail && <p className="speaker__detail">{speaker.detail}</p>}
+            </div>
+
+            <div className="speaker__description">
+              {speaker.description.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <p className="speakers__more">More voices will be announced.</p>
     </Section>
   )
 }
@@ -798,7 +925,7 @@ function Footer() {
 
 /* --------------------------------------------------------------------- app */
 
-export default function App() {
+export default function App({ heroMode = 'still' }) {
   useParallax()
   useMagnetic()
 
@@ -810,10 +937,11 @@ export default function App() {
       <Spine />
       <Nav />
       <main>
-        <Hero />
+        <Hero heroMode={heroMode} />
         <Pillars />
         <About />
         <Space />
+        <Speakers />
         <Audience />
         <Quote />
         <Ethos />
