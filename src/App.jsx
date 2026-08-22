@@ -26,8 +26,8 @@ import {
 
 const NAV = [
   ['What is Unio', '#about'],
-  ['Speakers', '#speakers'],
   ['The Space', '#space'],
+  ['Speakers', '#speakers'],
   ['Ethos', '#ethos'],
   ['Who It’s For', '#audience'],
 ]
