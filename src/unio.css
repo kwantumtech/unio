@@ -2449,7 +2449,7 @@ ol {
     width: 100%;
     margin-top: auto;
     /* The lower hero elements rise together while retaining clear separation. */
-    margin-bottom: calc(11rem + 230px + env(safe-area-inset-bottom));
+    margin-bottom: calc(11rem + 200px + env(safe-area-inset-bottom));
     animation-duration: 1.4s;
   }
 
@@ -2792,6 +2792,13 @@ ol {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
     gap: clamp(3rem, 8vw, 7rem);
+  }
+}
+
+@media (min-width: 1000px) {
+  .speaker h4 {
+    max-width: none;
+    white-space: nowrap;
   }
 }
 
