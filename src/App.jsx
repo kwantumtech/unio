@@ -340,7 +340,7 @@ function Hero({ heroMode }) {
   return (
     // The live page is a composed still; Preview alone rehearses the one-time
     // film and resolves into that same final still.
-    <section className="hero" id="top">
+    <section className={`hero hero--${heroMode}`} id="top">
       <div className="hero__media" ref={panel}>
         {hasVideoPreview && (
           <>
