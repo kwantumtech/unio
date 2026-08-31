@@ -7,6 +7,12 @@ import geoffPortrait from '../assets/speakers/geoff-cole.png'
 import eduardoPortrait from '../assets/speakers/eduardo-placer.png'
 import christaPortrait from '../assets/speakers/christa-cantillo.png'
 import arlettePortrait from '../assets/speakers/arlette-carlin.png'
+import margauxPortrait from '../assets/speakers/margaux-manley-lima.png'
+import skyAndSolLogo from '../assets/sponsors/sky-and-sol.png'
+import lifewayKefirLogo from '../assets/sponsors/lifeway-kefir.png'
+import thePatchMethodLogo from '../assets/sponsors/the-patch-method.png'
+import recessLogo from '../assets/sponsors/recess.png'
+import kwantumLogo from '../assets/sponsors/kwantum.svg'
 import { Arrow, Pin, Recalibrate, Regulate, Reset, Serotonin } from './Icons.jsx'
 import {
   useCountdown,
@@ -30,6 +36,7 @@ const NAV = [
   ['Speakers', '#speakers'],
   ['Ethos', '#ethos'],
   ['Who It’s For', '#audience'],
+  ['FAQ', '#faq'],
 ]
 
 /** FreshBooks checkout. External processor, so it opens in its own tab. */
@@ -84,6 +91,109 @@ const BENEFITS = [
   ['Increase', 'employee', 'engagement'],
 ]
 
+const SPONSORS = [
+  ['Sky & Sol', skyAndSolLogo, 'https://skyandsol.co/'],
+  ['Lifeway Kefir', lifewayKefirLogo, 'https://lifewaykefir.com/'],
+  ['Kwantum Tech', kwantumLogo, 'https://kwantumtech.com/'],
+  ['The Patch Method', thePatchMethodLogo, 'https://www.thepatchmethod.com/'],
+  ['Recess', recessLogo, 'https://takearecess.com/'],
+]
+
+const FAQS = [
+  [
+    'What time does UNIO begin and end?',
+    <>
+      Guest arrival and check-in begin at <strong>9:30 AM</strong>. The core program begins promptly at{' '}
+      <strong>10:00 AM</strong> and runs through <strong>3:00 PM</strong>, followed by{' '}
+      <strong>The Closing Listening Room</strong>.
+    </>,
+  ],
+  [
+    'Where is UNIO taking place?',
+    <>
+      UNIO will be held at <strong>The Sacred Space Miami</strong>, located at{' '}
+      <strong>105 NE 24th Street, Miami, FL 33137</strong>, in Wynwood.
+    </>,
+  ],
+  [
+    'Is parking available?',
+    <>Yes. <strong>Complimentary valet parking</strong> is included for all UNIO guests.</>,
+  ],
+  [
+    'What should I wear?',
+    <>
+      Refined comfort is encouraged. Choose clothing that allows you to sit, move and participate comfortably
+      throughout the day. There will be light guided movement, but this is not a fitness event and workout attire
+      is not required.
+      <br />
+      <br />
+      We also recommend bringing a light layer, as indoor temperatures may vary.
+    </>,
+  ],
+  [
+    'What should I bring?',
+    <>
+      Very little. Water and everything needed for the programmed experiences will be provided.
+      <br />
+      <br />
+      You may want to bring a notebook or journal for anything you would like to capture throughout the day.
+    </>,
+  ],
+  [
+    'Will lunch be provided?',
+    <>
+      Yes. A <strong>plant-based lunch catered by Love Life Cafe</strong> is included with your UNIO experience.
+      <br />
+      <br />
+      {/* TODO: Add the lunch menu link once the menu URL is available. */}
+      <br />
+      <br />
+      Additional tastings and partner offerings will also be available during the day.
+    </>,
+  ],
+  [
+    'Do I need any prior experience?',
+    'Not at all. No previous experience with breathwork, nervous system practices, movement, meditation or similar practices is required. Each experience is designed to be approachable whether these practices are familiar to you or completely new.',
+  ],
+  [
+    'Do I have to participate in every session?',
+    'No. Guests are encouraged to experience the day in the way that feels most useful to them. Guided movement and experiential portions of the program can be modified or opted out of at any time.',
+  ],
+  [
+    'Is UNIO a retreat or fitness event?',
+    'No. UNIO is a one-day wellness experience centered on the science and practice of regulation, resilience and well-being. The day brings together expert conversations, practical education and guided experiences designed to offer tools and insights that can be applied well beyond the event.',
+  ],
+  [
+    'Will there be opportunities to connect with other guests?',
+    'Yes. UNIO is intentionally designed to create opportunities for conversation and connection throughout the day, including during arrival, lunch, transitions and the closing experience.',
+  ],
+  [
+    'Will private one-on-one coaching sessions be available?',
+    <>
+      Yes. A limited number of <strong>private one-on-one coaching sessions with Dr. Margaux Manley</strong> will
+      be available throughout the day.
+      <br />
+      <br />
+      Guests will have an opportunity to reserve a session in advance or upon arrival, based on availability. Feel
+      free to email <a href="mailto:hello@alistevents.net">hello@alistevents.net</a> to reserve your slot in advance.
+    </>,
+  ],
+  [
+    'What is The Closing Listening Room?',
+    <>
+      <strong>The Closing Listening Room</strong> is UNIO&apos;s final experience of the day, an immersive sound
+      experience designed to create a thoughtful transition out of the program.
+      <br />
+      <br />
+      It immediately follows the core program and is included with your UNIO admission.
+    </>,
+  ],
+  [
+    'Will photography and video be taken during the event?',
+    'Yes. UNIO will be professionally photographed and filmed, and portions of the experience may be captured for future UNIO communications and marketing.',
+  ],
+]
+
 // Speaker programming lives in one content collection so new client-approved
 // sessions can be added without changing the component or its layout.
 const SPEAKERS = [
@@ -130,6 +240,17 @@ const SPEAKERS = [
     description: [
       'As the day moves toward its final session, the Unio experience moves beyond conversation and into sound. Arlette Carlin, resident DJ at the iconic Delano Miami Beach, will curate an immersive sonic journey designed to let the work of the day settle into the body.',
       'A closing immersion. A frequency-forward experience designed to leave you grounded, open, and at ease. Dim lights. Intentional sound. A different kind of close.',
+    ],
+  },
+  {
+    name: 'Dr. Margaux Manley Lima, Ed.D., ACC',
+    portrait: margauxPortrait,
+    role: 'Executive Coach',
+    session: 'The Coaching Corner',
+    detail: 'Private one-on-one coaching sessions.',
+    description: [
+      'Throughout the day, guests will have the opportunity to reserve a private coaching session with executive coach Dr. Margaux Manley Lima. Designed as a strategic pause for reflection, each conversation offers space to explore a current challenge, decision, or transition where greater clarity could create meaningful movement forward.',
+      'Reserve your session in advance or upon arrival, based on availability.',
     ],
   },
 ]
@@ -548,6 +669,7 @@ function Speakers() {
             </div>
           </li>
         ))}
+        <li className="speaker speaker--image" aria-hidden="true" />
       </ol>
 
       <p className="speakers__more">More voices will be announced.</p>
@@ -714,6 +836,57 @@ function Benefits() {
   )
 }
 
+function Sponsors() {
+  return (
+    <Section id="sponsors" tone="light" className="sponsors">
+      <header className="sponsors__head">
+        <Kicker>Our sponsors</Kicker>
+        <h2 className="display">Made possible by <em>good company.</em></h2>
+      </header>
+
+      <ul className="sponsors__grid" aria-label="UNIO sponsors">
+        {SPONSORS.map(([name, logo, url], i) => (
+          <li key={name} style={{ '--d': `${i * 80}ms` }}>
+            <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`${name} (opens in a new tab)`}>
+              <img src={logo} alt={name} loading="lazy" decoding="async" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Section>
+  )
+}
+
+function FAQ() {
+  const ref = useReveal({ threshold: 0.16 })
+
+  return (
+    <section className="faq" id="faq" ref={ref}>
+      <header className="faq__head">
+        <Kicker numeral="VI">Frequently Asked Questions</Kicker>
+        <p className="prose">
+          Everything you need to know before joining us for UNIO: The Science of Reset.
+        </p>
+      </header>
+
+      <div className="faq__list">
+        {FAQS.map(([question, answer], i) => (
+          <details key={question} className="faq__item" style={{ '--d': `${i * 70}ms` }}>
+            <summary>
+              <span className="faq__number">{String(i + 1).padStart(2, '0')}</span>
+              <span className="faq__question">{question}</span>
+              <span className="faq__plus" aria-hidden="true" />
+            </summary>
+            <div className="faq__answer">
+              <p>{answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 /* ------------------------------------------------------------------- form */
 
 /**
@@ -831,7 +1004,7 @@ function Interest() {
   return (
     <section className="interest" id="interest" ref={ref}>
       <div className="interest__copy">
-        <Kicker numeral="VI">Express Interest</Kicker>
+        <Kicker numeral="VII">Express Interest</Kicker>
         <h2 className="display">
           Seats are limited — <em>intentionally so.</em>
         </h2>
@@ -946,6 +1119,8 @@ export default function App({ heroMode = 'still' }) {
         <Quote />
         <Ethos />
         <Benefits />
+        <Sponsors />
+        <FAQ />
         <Interest />
       </main>
       <Footer />

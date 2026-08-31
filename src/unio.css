@@ -1102,9 +1102,10 @@ ol {
   font-family: var(--sans);
   font-size: clamp(0.95rem, 2.1vw, 1.3125rem);
   font-weight: 500;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ground);
+
 }
 
 /* Presenter lockup: the partner mark carries the name, so "presents" is the
@@ -1117,7 +1118,8 @@ ol {
      within a pixel of the wordmark's own baseline at this size. */
   align-items: baseline;
   gap: 0.7rem;
-  margin-bottom: clamp(0.7rem, 1.4vh, 1.1rem);
+  margin-bottom: clamp(1.2rem, 1.4vh, 1.1rem);
+
 }
 
 .hero__presents img {
@@ -1419,6 +1421,18 @@ ol {
   min-width: 0;
   padding: clamp(1.75rem, 4vw, 3rem) 0;
   background: var(--reset);
+}
+
+.speaker--image {
+  min-height: 100%;
+  padding: 0;
+  overflow: hidden;
+  min-height: 22rem;
+  background-color: var(--ground);
+  background-image: url('/assets/images/terrace.webp');
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  background-position: 62% 0;
 }
 
 .speaker__head {
@@ -1990,6 +2004,236 @@ ol {
   color: var(--ink-muted);
 }
 
+/* sponsors ---------------------------------------------------------------- */
+
+.sponsors {
+  max-width: var(--max);
+  margin-inline: auto;
+}
+
+.sponsors__head .display {
+  max-width: 13ch;
+  margin-top: 1.5rem;
+}
+
+.sponsors__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: clamp(3.25rem, 7vw, 5.5rem);
+  border: 1px solid var(--hair-dark);
+  background: var(--hair-dark);
+}
+
+.sponsors__grid li {
+  display: grid;
+  place-items: center;
+  min-height: clamp(9rem, 20vw, 13rem);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: #fff;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--slow) var(--ease-soft) var(--d),
+    transform 1.25s var(--ease) var(--d);
+}
+
+.sponsors.is-in .sponsors__grid li {
+  opacity: 1;
+  transform: none;
+}
+
+.sponsors__grid img {
+  width: min(100%, 11.5rem);
+  max-height: 5rem;
+  object-fit: contain;
+}
+
+.sponsors__grid li a {
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.sponsors__grid li:nth-child(3),
+.sponsors__grid li:nth-child(4) {
+  padding-inline: clamp(1rem, 2.5vw, 2rem);
+}
+
+.sponsors__grid li:nth-child(3) img {
+  width: min(100%, 14rem);
+}
+
+.sponsors__grid li:nth-child(4) img {
+  width: min(100%, 14rem);
+  max-height: 7rem;
+}
+
+@media (max-width: 599px) {
+  .sponsors__grid li:nth-child(3),
+  .sponsors__grid li:nth-child(4) {
+    padding-inline: 0.75rem;
+  }
+
+  .sponsors__grid li:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* faq --------------------------------------------------------------------- */
+
+.faq {
+  display: grid;
+  gap: clamp(3.5rem, 8vw, 7rem);
+  max-width: var(--max);
+  margin-inline: auto;
+  padding: var(--pad-y) var(--gutter);
+  background: var(--clarity);
+}
+
+.faq__head .prose {
+  margin-top: 1.6rem;
+  max-width: 35ch;
+}
+
+.faq__list {
+  border-top: 1px solid var(--hair-dark);
+}
+
+.faq__item {
+  border-bottom: 1px solid var(--hair-dark);
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--slow) var(--ease-soft) var(--d),
+    transform 1.25s var(--ease) var(--d);
+}
+
+.faq.is-in .faq__item {
+  opacity: 1;
+  transform: none;
+}
+
+.faq__item summary {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  min-height: clamp(4.5rem, 8vw, 6.5rem);
+  padding-block: 1rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq__item summary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid var(--regulation);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.75s var(--ease);
+}
+
+.faq__item {
+  position: relative;
+}
+
+.faq__item:hover summary::before,
+.faq__item:focus-within summary::before {
+  transform: scaleX(1);
+}
+
+.faq__number {
+  align-self: start;
+  padding-top: 0.45em;
+  color: var(--regulation);
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+}
+
+.faq__question {
+  font-size: clamp(1.35rem, 1rem + 1.35vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.faq__plus {
+  position: relative;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid var(--regulation);
+  border-radius: 50%;
+  transition: transform 0.5s var(--ease), background 0.5s var(--ease);
+}
+
+.faq__plus::before,
+.faq__plus::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.5rem;
+  height: 1px;
+  background: var(--regulation);
+  transform: translate(-50%, -50%);
+}
+
+.faq__plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+  transition: transform 0.5s var(--ease);
+}
+
+.faq__item[open] .faq__plus {
+  background: var(--regulation);
+}
+
+.faq__item[open] .faq__plus::before,
+.faq__item[open] .faq__plus::after {
+  background: var(--clarity);
+}
+
+.faq__item[open] .faq__plus::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.faq__answer {
+  max-width: 58ch;
+  padding: 0 3.25rem 1.75rem clamp(2.75rem, 7vw, 5rem);
+  color: var(--ink-muted);
+}
+
+.faq__answer p {
+  font-size: clamp(1rem, 0.92rem + 0.35vw, 1.125rem);
+  line-height: 1.52;
+}
+
+.faq__answer strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.faq__answer a {
+  color: var(--regulation);
+  font-family: var(--sans);
+  font-size: 0.78em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.faq__answer a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
 /* interest ---------------------------------------------------------------- */
 
 .interest {
@@ -2460,6 +2704,7 @@ ol {
   /* Static live page: one new visible beat every half-second. */
   .hero--still .hero__actions {
     animation-delay: 2200ms;
+    margin-top: 5rem;
   }
 
   .hero__presents {
@@ -2470,7 +2715,6 @@ ol {
   .hero__title {
     font-size: clamp(1.25rem, 2.52vw, 1.575rem);
     /* Independent mobile control for the Science of Reset line. */
-    margin-top: 20px;
   }
 
   .hero__date {
@@ -2832,6 +3076,10 @@ ol {
 
   .benefits__grid {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .sponsors__grid {
+    grid-template-columns: repeat(5, 1fr);
   }
 
   .benefits__grid li {
