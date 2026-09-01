@@ -345,7 +345,7 @@ function Nav() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Purchase tickets
+          Reserve your place
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
 
@@ -376,7 +376,7 @@ function Nav() {
           rel="noopener noreferrer"
           onClick={() => setOpen(false)}
         >
-          Purchase tickets
+          Reserve your place
           <span className="sr-only"> (opens in a new tab)</span>
           <Arrow />
         </a>
@@ -404,7 +404,7 @@ function MobileBar() {
         <span>Sacred Space Miami</span>
       </p>
       <a className="btn btn--sm" href={TICKET_URL} target="_blank" rel="noopener noreferrer">
-        Purchase tickets
+        Reserve your place
         <span className="sr-only"> (opens in a new tab)</span>
       </a>
     </div>
@@ -520,7 +520,7 @@ function Hero({ heroMode }) {
       )}
 
       <div className="hero__copy">
-        <p className="hero__save">Save the date.</p>
+        <p className="hero__save">Registration is now open.</p>
 
         <div className="hero__dateblock" aria-hidden="true">
           <p className="hero__date">9.19</p>
@@ -534,7 +534,7 @@ function Hero({ heroMode }) {
           <span>presents</span>
         </p>
 
-        <h1 className="hero__title">The Science of Reset.</h1>
+        <h1 className="hero__title"><span className="sr-only">UNIO - </span>The Science of Reset.</h1>
 
         <p className="hero__lede">
           A science-backed wellness experience for high-performing professionals, leaders, and
@@ -543,7 +543,7 @@ function Hero({ heroMode }) {
 
         <div className="hero__actions">
           <a className="btn magnetic" href={TICKET_URL} target="_blank" rel="noopener noreferrer">
-            Purchase tickets
+            Reserve your place
             <span className="sr-only"> (opens in a new tab)</span>
             <Arrow />
           </a>

@@ -1429,10 +1429,10 @@ ol {
   overflow: hidden;
   min-height: 22rem;
   background-color: var(--ground);
-  background-image: url('/assets/images/terrace.webp');
+  background-image: url('/assets/images/orbit-portrait.webp');
   background-repeat: no-repeat;
-  background-size: auto 100%;
-  background-position: 62% 0;
+  background-size: cover;
+  background-position: 50% 20%;
 }
 
 .speaker__head {
