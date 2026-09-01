@@ -11,7 +11,7 @@
       /* With JS enabled, the SEO fallback in #root stays invisible while the app mounts
          (which removes it), fading in only on very slow loads so visitors never see a flash.
          Without JS the .js class is never added and the fallback is immediately visible. */
-      .js #root > main {
+      .js #seo-fallback {
         opacity: 0;
         animation: unio-fallback-in 0.6s ease 1.5s forwards;
       }
@@ -89,7 +89,7 @@
   <body>
     <div id="root">
       <!-- Static fallback for crawlers and no-JS visitors; replaced when the app mounts. -->
-      <main style="max-width: 42rem; margin: 0 auto; padding: 3rem 1.5rem; font-family: Georgia, 'Times New Roman', serif; color: #1c1a14; background: #fcfbf5">
+      <main id="seo-fallback" style="max-width: 42rem; margin: 0 auto; padding: 3rem 1.5rem; font-family: Georgia, 'Times New Roman', serif; color: #1c1a14; background: #fcfbf5">
         <h1>UNIO - The Science of Reset.</h1>
         <p>
           Registration is now open. A science-backed wellness experience for high-performing
