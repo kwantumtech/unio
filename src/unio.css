@@ -2133,6 +2133,7 @@ ol {
   content: '';
   position: absolute;
   inset: 0;
+  pointer-events: none;
   border-top: 1px solid var(--regulation);
   transform: scaleX(0);
   transform-origin: left;

@@ -8,6 +8,7 @@ import eduardoPortrait from '../assets/speakers/eduardo-placer.png'
 import christaPortrait from '../assets/speakers/christa-cantillo.png'
 import arlettePortrait from '../assets/speakers/arlette-carlin.png'
 import margauxPortrait from '../assets/speakers/margaux-manley-lima.png'
+import ellaPortrait from '../assets/speakers/ella-devar.png'
 import skyAndSolLogo from '../assets/sponsors/sky-and-sol.png'
 import lifewayKefirLogo from '../assets/sponsors/lifeway-kefir.png'
 import thePatchMethodLogo from '../assets/sponsors/the-patch-method.png'
@@ -117,7 +118,7 @@ const FAQS = [
   ],
   [
     'Is parking available?',
-    <>Yes. <strong>Complimentary valet parking</strong> is included for all UNIO guests.</>,
+    <>Yes. <strong>Complimentary parking</strong> is included for all UNIO guests.</>,
   ],
   [
     'What should I wear?',
@@ -145,7 +146,15 @@ const FAQS = [
       Yes. A <strong>plant-based lunch catered by Love Life Cafe</strong> is included with your UNIO experience.
       <br />
       <br />
-      {/* TODO: Add the lunch menu link once the menu URL is available. */}
+      <a
+        href="/assets/unio-lunch-menu.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(event) => event.stopPropagation()}
+      >
+        View the lunch menu
+        <span className="sr-only"> (opens in a new tab)</span>
+      </a>
       <br />
       <br />
       Additional tastings and partner offerings will also be available during the day.
@@ -251,6 +260,17 @@ const SPEAKERS = [
     description: [
       'Throughout the day, guests will have the opportunity to reserve a private coaching session with executive coach Dr. Margaux Manley Lima. Designed as a strategic pause for reflection, each conversation offers space to explore a current challenge, decision, or transition where greater clarity could create meaningful movement forward.',
       'Reserve your session in advance or upon arrival, based on availability.',
+    ],
+  },
+  {
+    name: 'Ella Davar, RD',
+    portrait: ellaPortrait,
+    role: 'Registered Dietitian · Gut-Brain Health Expert',
+    session: 'The 5 Factors of Gut-Brain Reset',
+    detail: 'Healing from within to lead well.',
+    description: [
+      'Ella Davar, RD translates the science of the gut-brain axis into a practical, evidence-based framework. Drawing from her book, she breaks down five key factors that reset this connection and help leaders regulate from the inside out.',
+      'Guests will gain actionable steps to reduce inflammation, improve mental clarity, and build a foundation for sustained energy—showing that internal healing is essential for optimal leadership and performance.',
     ],
   },
 ]
@@ -669,7 +689,6 @@ function Speakers() {
             </div>
           </li>
         ))}
-        <li className="speaker speaker--image" aria-hidden="true" />
       </ol>
 
       <p className="speakers__more">More voices will be announced.</p>
